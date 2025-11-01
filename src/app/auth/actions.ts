@@ -2,15 +2,18 @@
 
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { SearchParams } from "next/dist/server/request/search-params"
 
 import { createClient } from "@/utils/supabase/server"
 
 export async function login(formData: FormData) {
   const supabase = await createClient()
 
+
   const data = {
     email: formData.get('email') as string,
-    password: formData.get('password') as string
+    password: formData.get('password') as string,
+    next: formData.get('next') as string
   }
 
   const { error } = await supabase.auth.signInWithPassword(data)
@@ -19,11 +22,11 @@ export async function login(formData: FormData) {
     redirect('/error')
   }
 
-  revalidatePath('/layout')
-  redirect('/')
+  const safeNext = data.next.startsWith('/') ? data.next : '/dashboard'
+  redirect(safeNext)
 }
 
-export async function singup(formData: FormData) {
+export async function signup(formData: FormData) {
   const supabase = await createClient()
 
   const data = {

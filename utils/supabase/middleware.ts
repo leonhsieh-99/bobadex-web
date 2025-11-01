@@ -8,7 +8,7 @@ export async function updateSession(request: NextRequest) {
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
@@ -31,16 +31,26 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/error') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
-  }
+  const path = request.nextUrl.pathname;
 
-  return supabaseResponse
-}
+  const isPublic =
+    path === "/" ||
+    path.startsWith("/login") ||
+    path.startsWith("/auth") ||
+    path.startsWith("/error") ||
+    path.startsWith("/favicon");
+
+    if (!user && !isPublic) {
+      const full = request.nextUrl.pathname + request.nextUrl.search;
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/login";
+      url.search = `?next=${encodeURIComponent(full)}`;
+      return NextResponse.redirect(url);
+    }
+
+    if (user && (path === "/auth/login" || path === "/login" || path === "/auth")) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    return supabaseResponse
+  }

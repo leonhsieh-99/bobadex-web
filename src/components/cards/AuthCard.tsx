@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
+import { login } from "@/app/auth/actions"
 import { register } from "module"
 
 type Mode = 'login' | 'register'
@@ -20,18 +21,6 @@ export default function AuthCard({ mode }: { mode: Mode }) {
   const otherRoute = mode === 'login' ? 'signup' : 'login'
   const otherHref = `${otherRoute}${next ? `?next=${encodeURIComponent(next)}` : ""}`;
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setBusy(true)
-    try {
-      // do something
-    } catch (e) {
-      // do something
-    } finally {
-      setBusy(false)
-    }
-  }
-
   return (
     <div className="min-h-[100dvh] flex items-center justify-center p-6">
       <div className="min-w-1/3 rounded-2xl border bg-background p-6 shadow-sm">
@@ -44,7 +33,8 @@ export default function AuthCard({ mode }: { mode: Mode }) {
         </div>
 
         {/* Form */}
-        <form className="space-y-4 mt-6" onSubmit={onSubmit} autoComplete="on">
+        <form action={login} className="space-y-4 mt-6" autoComplete="on">
+          <input type="hidden" name="next" value={next}/>
           <div>
             <label htmlFor="email" className="mb-1 block text-sm">Email</label>
               <input
