@@ -1,4 +1,6 @@
-export default function ShopsView({shops, isOwner} : {shops: any[], isOwner: boolean}) {
+import { Shop } from "../types";
+
+export default function ShopsView({shops, isOwner} : {shops: Shop[], isOwner: boolean}) {
   return (
     <div className="">
       {shops.map((shop) => (
