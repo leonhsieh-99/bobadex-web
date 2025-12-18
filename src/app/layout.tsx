@@ -29,7 +29,6 @@ export default function RootLayout({
       <body
         className={`min-h-screen flex flex-col ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TopNav className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur" />
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
