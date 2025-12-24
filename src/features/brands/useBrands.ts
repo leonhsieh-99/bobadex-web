@@ -22,9 +22,7 @@ export function useBrands() {
   const query = useQuery<Brand[]> ({
     queryKey: ['brands'],
     queryFn: async () => {
-      const res = await fetch('/api/brands', {
-        cache: 'no-store',
-      })
+      const res = await fetch('/api/brands')
 
       if (!res.ok) {
         throw new Error('Failed to fetch brands')

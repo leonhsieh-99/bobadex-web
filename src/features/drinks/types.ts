@@ -6,6 +6,6 @@ export type Drink = {
   rating: number | null
   is_favorite: boolean | null
   visibility: 'private' | 'public' | null
-  created_at: Date | null
+  created_at: string | null
   notes: string | null
 }
