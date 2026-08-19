@@ -1,10 +1,12 @@
 "use client";
 
 import {
+  CircleUserRound,
   HomeIcon,
   LibraryBig,
   Lock,
   LogIn,
+  Medal,
   Settings,
   Trophy,
   UserRound,
@@ -16,7 +18,13 @@ import { createClient } from "@/utils/supabase/client";
 const navItems = [
   { name: "Home", icon: HomeIcon, href: "#top" },
   { name: "Brands", icon: LibraryBig, href: "#featured" },
-  { name: "Rankings", icon: Trophy, href: "#rankings" },
+  { name: "Rankings", icon: Trophy },
+] as const;
+
+const memberItems = [
+  { name: "My Bobadex", icon: UserRound, href: "/dashboard" },
+  { name: "Achievements", icon: Medal, href: "/dashboard/achievements" },
+  { name: "Profile", icon: CircleUserRound, href: "/dashboard/profile" },
 ] as const;
 
 const itemClassName =
@@ -53,7 +61,7 @@ export default function PublicSidebar() {
         {navItems.map((item, index) => {
           const Icon = item.icon;
 
-          return (
+          return "href" in item ? (
             <a
               key={item.name}
               href={item.href}
@@ -62,25 +70,39 @@ export default function PublicSidebar() {
               <Icon className="size-[18px]" aria-hidden="true" />
               {item.name}
             </a>
+          ) : (
+            <button
+              key={item.name}
+              type="button"
+              className={`${itemClassName} ${index === 0 ? "bg-[#2b241f]/8" : ""}`}
+            >
+              <Icon className="size-[18px]" aria-hidden="true" />
+              {item.name}
+            </button>
           );
         })}
 
-        {isAuthenticated ? (
-          <a href="/dashboard" className={itemClassName}>
-            <UserRound className="size-[18px]" aria-hidden="true" />
-            My Bobadex
-          </a>
-        ) : (
-          <span
-            className={`${itemClassName} cursor-not-allowed opacity-45 hover:bg-transparent`}
-            aria-disabled="true"
-            title="Sign in to open My Bobadex"
-          >
-            <UserRound className="size-[18px]" aria-hidden="true" />
-            My Bobadex
-            <Lock className="ml-auto size-3.5" aria-hidden="true" />
-          </span>
-        )}
+        {memberItems.map((item) => {
+          const Icon = item.icon;
+
+          return isAuthenticated ? (
+            <a key={item.name} href={item.href} className={itemClassName}>
+              <Icon className="size-[18px]" aria-hidden="true" />
+              {item.name}
+            </a>
+          ) : (
+            <span
+              key={item.name}
+              className={`${itemClassName} cursor-not-allowed opacity-45 hover:bg-transparent`}
+              aria-disabled="true"
+              title={`Sign in to open ${item.name}`}
+            >
+              <Icon className="size-[18px]" aria-hidden="true" />
+              {item.name}
+              <Lock className="ml-auto size-3.5" aria-hidden="true" />
+            </span>
+          );
+        })}
 
         <button type="button" className={itemClassName}>
           <Settings className="size-[18px]" aria-hidden="true" />

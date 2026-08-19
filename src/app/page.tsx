@@ -1,4 +1,4 @@
-import { Binoculars, MapPin, Sparkles, Star } from "lucide-react";
+import { MapPin, Sparkles } from "lucide-react";
 import Image from "next/image";
 import PublicSidebar from "@/shared/layout/PublicSidebar";
 import { publicAssetURL, thumbPath } from "@/utils/media";
@@ -63,10 +63,13 @@ export default function Home() {
             A catalogue of boba brands, shops, drinks, and the people keeping
             track of them.
           </p>
-          <div className="mt-6 flex items-center gap-3 rounded-full border border-[#2b241f]/10 bg-white/70 px-5 py-3 text-sm font-semibold shadow-sm backdrop-blur">
+          <a
+            href="/auth/signup"
+            className="mt-6 flex items-center gap-3 rounded-full border border-[#2b241f]/10 bg-white/70 px-5 py-3 text-sm font-semibold shadow-sm backdrop-blur transition-transform hover:-translate-y-0.5"
+          >
             <Sparkles className="size-4" aria-hidden="true" />
-            Three entries from the catalogue, every day
-          </div>
+            Sign up to track your favorites and build your own Bobadex
+          </a>
         </header>
 
         <section id="featured" aria-labelledby="featured-heading">
@@ -145,64 +148,6 @@ export default function Home() {
               );
             })}
           </div>
-        </section>
-
-        <section
-          id="rankings"
-          className="mt-16 grid gap-5 lg:grid-cols-[1.35fr_0.65fr]"
-        >
-          <div className="rounded-[2rem] border border-[#2b241f]/10 bg-[#efe7d6] p-7 shadow-[0_18px_50px_rgba(43,36,31,0.08)] sm:p-9">
-            <div className="mb-8 flex items-start justify-between gap-4">
-              <div>
-                <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] opacity-60">
-                  Community rankings
-                </p>
-                <h2 className="text-3xl font-black tracking-[-0.035em]">
-                  The leaderboard is brewing.
-                </h2>
-              </div>
-              <Star className="mt-1 size-7" aria-hidden="true" />
-            </div>
-
-            <div className="divide-y divide-[#2b241f]/10 border-y border-[#2b241f]/10">
-              {featuredBrands.map((brand, index) => (
-                <div
-                  key={brand.name}
-                  className="grid grid-cols-[2.25rem_1fr_auto] items-center gap-3 py-4"
-                >
-                  <span className="font-mono text-sm opacity-60">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="font-bold">{brand.name}</span>
-                  <span className="rounded-full bg-white/50 px-3 py-1 text-xs opacity-65">
-                    Collecting ratings
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <aside className="flex flex-col justify-between rounded-[2rem] border border-[#2b241f]/10 bg-white p-7 shadow-[0_12px_40px_rgba(74,51,32,0.06)] sm:p-9">
-            <div>
-              <div className="mb-8 flex size-12 items-center justify-center rounded-2xl bg-[#fff0c7]">
-                <Binoculars className="size-6" aria-hidden="true" />
-              </div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] opacity-60">
-                Make it yours
-              </p>
-              <h2 className="mt-3 text-3xl font-black leading-tight tracking-[-0.035em]">
-                Your personal boba journey starts here.
-              </h2>
-              <p className="mt-4 text-sm leading-6 opacity-70">
-                Sign in later to rate drinks, save favorites, and build a dex of
-                every shop you&apos;ve tried.
-              </p>
-            </div>
-
-            <p className="mt-10 border-t border-[#2b241f]/10 pt-5 text-xs font-semibold uppercase tracking-[0.14em] opacity-60">
-              Browse freely · Join when ready
-            </p>
-          </aside>
         </section>
       </div>
     </main>
