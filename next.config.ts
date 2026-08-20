@@ -13,6 +13,8 @@ const imageHosts = [
 
 const nextConfig: NextConfig = {
   images: {
+    // Brand thumbs are immutable hashes; keep optimized copies on the CDN.
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: imageHosts.map((hostname) => ({
       protocol: "https",
       hostname,

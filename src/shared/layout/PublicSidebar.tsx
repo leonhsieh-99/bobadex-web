@@ -3,6 +3,7 @@
 import {
   CircleUserRound,
   HomeIcon,
+  Info,
   LibraryBig,
   Lock,
   LogIn,
@@ -11,37 +12,80 @@ import {
   Trophy,
   UserRound,
 } from "lucide-react";
-import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import UserMark from "@/shared/layout/UserMark";
+import { userInitials } from "@/shared/layout/userInitials";
 import { createClient } from "@/utils/supabase/client";
 
 const navItems = [
-  { name: "Home", icon: HomeIcon, href: "#top" },
-  { name: "Brands", icon: LibraryBig, href: "#featured" },
-  { name: "Rankings", icon: Trophy },
+  { name: "Home", icon: HomeIcon, href: "/" },
+  { name: "Brands", icon: LibraryBig, href: "/brands" },
+  { name: "Achievements", icon: Medal, href: "/achievements" },
+  { name: "Rankings", icon: Trophy, href: "/rankings" },
+  { name: "About", icon: Info, href: "/about" },
 ] as const;
 
 const memberItems = [
   { name: "My Bobadex", icon: UserRound, href: "/dashboard" },
-  { name: "Achievements", icon: Medal, href: "/dashboard/achievements" },
   { name: "Profile", icon: CircleUserRound, href: "/dashboard/profile" },
 ] as const;
 
 const itemClassName =
   "flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-[#2b241f]/5 md:w-full";
 
+function isActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export default function PublicSidebar() {
+  const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [viewer, setViewer] = useState<{
+    imagePath: string | null;
+    initials: string;
+  }>({ imagePath: null, initials: "G" });
 
   useEffect(() => {
     const supabase = createClient();
 
-    supabase.auth.getUser().then(({ data }) => {
-      setIsAuthenticated(Boolean(data.user));
-    });
+    async function loadViewer() {
+      const { data } = await supabase.auth.getUser();
+      const user = data.user;
+      setIsAuthenticated(Boolean(user));
+
+      if (!user) {
+        setViewer({ imagePath: null, initials: "G" });
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("users")
+        .select("username, display_name, profile_image_path")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      setViewer({
+        imagePath: profile?.profile_image_path ?? null,
+        initials: userInitials(
+          profile?.display_name,
+          profile?.username,
+          user.email,
+        ),
+      });
+    }
+
+    loadViewer();
 
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       setIsAuthenticated(Boolean(session?.user));
+      if (!session?.user) {
+        setViewer({ imagePath: null, initials: "G" });
+        return;
+      }
+      loadViewer();
     });
 
     return () => data.subscription.unsubscribe();
@@ -50,35 +94,32 @@ export default function PublicSidebar() {
   return (
     <aside className="relative z-20 border-b border-[#2b241f]/10 bg-[#fbf8f0]/90 backdrop-blur md:fixed md:inset-y-0 md:left-0 md:w-52 md:border-b-0 md:border-r">
       <nav className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-4 py-3 md:h-full md:flex-col md:items-stretch md:overflow-visible md:px-4 md:py-7">
-        <a
-          href="#top"
-          className="mr-3 hidden rounded-2xl p-2 md:mb-10 md:mr-0 md:block"
-          aria-label="Bobadex home"
+        <Link
+          href={isAuthenticated ? "/dashboard/profile" : "/"}
+          className="mr-3 flex items-center rounded-full p-1 md:mb-10 md:mr-0 md:justify-center"
+          aria-label={isAuthenticated ? "Your profile" : "Bobadex home"}
         >
-          <Image src="/logo.svg" alt="Bobadex" width={156} height={42} />
-        </a>
+          <UserMark
+            key={viewer.imagePath ?? "guest"}
+            imagePath={viewer.imagePath}
+            initials={viewer.initials}
+            size={48}
+          />
+        </Link>
 
-        {navItems.map((item, index) => {
+        {navItems.map((item) => {
           const Icon = item.icon;
+          const active = isActive(pathname, item.href);
 
-          return "href" in item ? (
-            <a
+          return (
+            <Link
               key={item.name}
               href={item.href}
-              className={`${itemClassName} ${index === 0 ? "bg-[#2b241f]/8" : ""}`}
+              className={`${itemClassName} ${active ? "bg-[#2b241f]/8" : ""}`}
             >
               <Icon className="size-[18px]" aria-hidden="true" />
               {item.name}
-            </a>
-          ) : (
-            <button
-              key={item.name}
-              type="button"
-              className={`${itemClassName} ${index === 0 ? "bg-[#2b241f]/8" : ""}`}
-            >
-              <Icon className="size-[18px]" aria-hidden="true" />
-              {item.name}
-            </button>
+            </Link>
           );
         })}
 
@@ -86,10 +127,10 @@ export default function PublicSidebar() {
           const Icon = item.icon;
 
           return isAuthenticated ? (
-            <a key={item.name} href={item.href} className={itemClassName}>
+            <Link key={item.name} href={item.href} className={itemClassName}>
               <Icon className="size-[18px]" aria-hidden="true" />
               {item.name}
-            </a>
+            </Link>
           ) : (
             <span
               key={item.name}
@@ -110,13 +151,13 @@ export default function PublicSidebar() {
         </button>
 
         {!isAuthenticated && (
-          <a
+          <Link
             href="/auth/login?next=/dashboard"
             className={`${itemClassName} ml-auto md:mt-auto md:ml-0`}
           >
             <LogIn className="size-[18px]" aria-hidden="true" />
             Sign in
-          </a>
+          </Link>
         )}
       </nav>
     </aside>

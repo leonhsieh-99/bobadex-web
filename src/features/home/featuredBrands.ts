@@ -1,0 +1,146 @@
+import type { FeaturedBrand } from "./types";
+
+export const INITIAL_FEATURED_SLUG = "sunright-tea-studio-eada95";
+
+export const featuredBrands: FeaturedBrand[] = [
+  {
+    slug: "sunright-tea-studio-eada95",
+    display: "Sunright Tea Studio",
+    icon_path: "brand-icons/sunright-tea-studio-eada95-1751199270618.png",
+    public_summary:
+      "Sunright Tea Studio is a tea-focused boba chain founded in Southern California in 2019, known for loose-leaf brewed teas, housemade boba, brûlée lattes and cheese-foam drinks. It operates across multiple U.S. states and has at least one location in Mexico.",
+    founded_place: "Southern California, United States",
+    founded_year: 2019,
+    market_presence: [
+      { name: "United States", level: "country", country_code: "US" },
+      { name: "Mexico", level: "country", country_code: "MX" },
+      { name: "California", level: "admin1", country_code: "US" },
+      { name: "Nevada", level: "admin1", country_code: "US" },
+      { name: "Texas", level: "admin1", country_code: "US" },
+      { name: "Washington", level: "admin1", country_code: "US" },
+    ],
+    signature_products: [],
+    known_for: [],
+    product_categories: [],
+    accent: "from-[#fff3c7] to-[#ffe4a8]",
+    mascotBackdrop: "bg-[#ffc84a]",
+  },
+  {
+    slug: "gongcha-17742a",
+    display: "Gong Cha",
+    icon_path: "brand-icons/gongcha-17742a-1751192743010.png",
+    public_summary:
+      "Gong cha is a Taiwanese bubble-tea franchise founded in Kaohsiung in 2006, known for freshly brewed whole‑leaf milk teas, signature milk foam and pearls. It operates internationally through a franchised model.",
+    founded_place: "Kaohsiung, Taiwan",
+    founded_year: 2006,
+    market_presence: [
+      { name: "Taiwan", level: "country", country_code: "TW" },
+      { name: "United States", level: "country", country_code: "US" },
+      { name: "United Kingdom", level: "country", country_code: "GB" },
+      { name: "Japan", level: "country", country_code: "JP" },
+      { name: "Korea (South)", level: "country", country_code: "KR" },
+      { name: "Australia", level: "country", country_code: "AU" },
+    ],
+    signature_products: [
+      "Brown Sugar Milk Tea",
+      "Black Milk Tea with Pearls",
+      "Milk Foam-topped teas (signature milk foam)",
+    ],
+    known_for: [],
+    product_categories: [
+      "Milk Tea",
+      "Fruit Tea",
+      "Smoothies",
+      "Milk Foam",
+      "Toppings (pearls, jellies, pudding)",
+    ],
+    accent: "from-[#ffe8e2] to-[#ffd0c5]",
+    mascotBackdrop: "bg-[#ef5b46]",
+  },
+  {
+    slug: "bobaguys-243cad",
+    display: "Boba Guys",
+    icon_path: "brand-icons/bobaguys-243cad-1751190896090.png",
+    public_summary:
+      "Boba Guys is a San Francisco–founded bubble-tea brand (founded 2011) known for premium milk teas like the Strawberry Matcha Latte and Classic Black Milk Tea. It operates across the SF Bay Area, Los Angeles and New York regions.",
+    founded_place: "San Francisco, California, United States",
+    founded_year: 2011,
+    market_presence: [
+      { name: "Bay Area", level: "metro", country_code: "US" },
+      { name: "New York", level: "city", country_code: "US" },
+    ],
+    signature_products: [
+      "Strawberry Matcha Latte",
+      "Classic Black Milk Tea",
+      "Horchata",
+      "Ube Latte",
+    ],
+    known_for: [],
+    product_categories: [
+      "bubble_tea",
+      "milk_tea",
+      "fruit_frescas",
+      "coffee",
+      "snacks/food",
+    ],
+    accent: "from-[#e8f4ed] to-[#cde8d8]",
+    mascotBackdrop: "bg-[#78b88d]",
+  },
+  {
+    slug: "chichasanchen-e3839d",
+    display: "Chicha San Chen",
+    icon_path: "brand-icons/chichasanchen-e3839d-1751198642530.png",
+    public_summary:
+      "Chicha San Chen (吃茶三千) is a Taiwanese tea-focused bubble-tea chain founded in 1998, known for tea-forward drinks like Dong Ding Oolong milk tea and signature tapioca pearls. It operates internationally with storefronts in multiple countries.",
+    founded_place: "Taichung, Taiwan",
+    founded_year: 1998,
+    market_presence: [
+      { name: "Taiwan", level: "country", country_code: "TW" },
+      { name: "Singapore", level: "country", country_code: "SG" },
+      { name: "Australia", level: "country", country_code: "AU" },
+      { name: "United States", level: "country", country_code: "US" },
+      { name: "Canada", level: "country", country_code: "CA" },
+      { name: "China", level: "country", country_code: "CN" },
+    ],
+    signature_products: [
+      "Dong Ding Oolong Fresh Milk Tea",
+      "Royal King Pearls",
+      "Osmanthus Oolong with mousse",
+      "Brown Sugar Bubble Volcano",
+    ],
+    known_for: [],
+    product_categories: [],
+    accent: "from-[#eef3dc] to-[#d7e4b5]",
+    mascotBackdrop: "bg-[#7a9a3a]",
+  },
+  {
+    slug: "kungfutea-e1ef51",
+    display: "Kung Fu Tea",
+    icon_path: "brand-icons/kungfutea-e1ef51-1751193706604.png",
+    public_summary:
+      "Kung Fu Tea is an American bubble-tea brand founded in Flushing, Queens (2010) offering freshly brewed milk and fruit teas, including signature KF Milk Tea and 38 Milk King. It operates across multiple countries with wide U.S. presence.",
+    founded_place: "Flushing, Queens, New York, United States",
+    founded_year: 2010,
+    market_presence: [
+      { name: "United States", level: "country", country_code: "US" },
+      { name: "Canada", level: "country", country_code: "CA" },
+      { name: "Taiwan", level: "country", country_code: "TW" },
+      { name: "Japan", level: "country", country_code: "JP" },
+    ],
+    signature_products: [
+      "KF Milk Tea",
+      "38 Milk King",
+      "Brown Sugar Pearl drinks",
+      "Pearl Milk Tea",
+    ],
+    known_for: [],
+    product_categories: [
+      "milk tea",
+      "fruit tea",
+      "slushies",
+      "specialty milk drinks",
+    ],
+    accent: "from-[#fde8e8] to-[#f5c8c8]",
+    mascotBackdrop: "bg-[#c43b3b]",
+  },
+];
