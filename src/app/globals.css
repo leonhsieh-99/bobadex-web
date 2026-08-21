@@ -41,6 +41,11 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-marquee: bobadex-marquee 32s linear infinite;
+  --animate-float: bobadex-float 5.5s ease-in-out infinite;
+  --animate-milk-tea-idle: milk-tea-idle 3.4s ease-in-out infinite;
+  --animate-milk-tea-pearl: milk-tea-pearl 2.4s ease-in-out infinite;
+  --animate-milk-tea-straw: milk-tea-straw 2.8s ease-in-out infinite;
 }
 
 :root {
@@ -116,7 +121,80 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@keyframes bobadex-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes bobadex-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes milk-tea-idle {
+  0%,
+  100% {
+    transform: rotate(-2.8deg) translateY(0);
+  }
+  50% {
+    transform: rotate(2.8deg) translateY(-14px);
+  }
+}
+
+@keyframes milk-tea-pearl {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes milk-tea-straw {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(7deg);
+  }
+}
+
+.cup-body {
+  transform-box: fill-box;
+  transform-origin: 120px 318px;
+}
+
+.cup-joint {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.cup-tea {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
 }
