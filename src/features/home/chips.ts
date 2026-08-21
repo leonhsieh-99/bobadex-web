@@ -45,7 +45,13 @@ export function marketChips(
   return chips;
 }
 
-export function tagChips(brand: FeaturedBrand, limit = 4) {
+export function tagChips(
+  brand: Pick<
+    FeaturedBrand,
+    "signature_products" | "known_for" | "product_categories"
+  >,
+  limit = 4,
+) {
   const signature = nonemptyStrings(brand.signature_products);
   if (signature.length) return signature.slice(0, limit);
 
@@ -58,7 +64,9 @@ export function tagChips(brand: FeaturedBrand, limit = 4) {
   return categories.slice(0, limit);
 }
 
-export function originEyebrow(brand: FeaturedBrand) {
+export function originEyebrow(
+  brand: Pick<FeaturedBrand, "founded_place" | "founded_year">,
+) {
   const place = brand.founded_place?.trim() || null;
   const year = brand.founded_year ? String(brand.founded_year).trim() : "";
 

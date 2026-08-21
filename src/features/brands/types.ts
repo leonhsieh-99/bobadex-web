@@ -1,3 +1,5 @@
+import type { MarketPresence } from "@/features/home/types";
+
 export type BrandStatus = "active" | "retired";
 
 export type Brand = {
@@ -18,4 +20,37 @@ export type PublicBrand = {
   rating_count: number | null;
   has_profile: boolean;
   public_summary: string | null;
+};
+
+export type BrandFact = {
+  label: string;
+  value: string;
+};
+
+export type BrandProfileFacts = {
+  founded_place: string | null;
+  founded_year: number | string | null;
+  market_presence: MarketPresence[];
+  signature_products: string[];
+  known_for: string[];
+  product_categories: string[];
+  aliases: string[];
+  extras: BrandFact[];
+};
+
+export type BrandDetail = {
+  slug: string;
+  display: string;
+  icon_path: string | null;
+  avg_rating: number | null;
+  rating_count: number | null;
+  has_profile: boolean;
+  public_summary: string | null;
+  facts: BrandProfileFacts;
+};
+
+export type BrandGalleryPhoto = {
+  id: string;
+  image_path: string;
+  comment: string | null;
 };
