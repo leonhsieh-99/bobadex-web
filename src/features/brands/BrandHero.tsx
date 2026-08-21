@@ -62,7 +62,11 @@ export default function BrandHero({ brand }: { brand: BrandDetail }) {
         </h1>
         <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold sm:text-base">
           <Star
-            className="size-4 fill-[#f0b429] text-[#f0b429]"
+            className={`size-4 ${
+              rating.countLabel
+                ? "fill-[#f0b429] text-[#f0b429]"
+                : "fill-transparent text-[#2b241f]/40"
+            }`}
             aria-hidden="true"
           />
           <span>{rating.label}</span>

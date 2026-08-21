@@ -1,9 +1,9 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Lock, LogIn, NotebookPen } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 type VisitState =
@@ -194,7 +194,7 @@ async function loadVisit(slug: string): Promise<VisitState> {
 
   return {
     status: "logged",
-    shopId: shop.id as string,
+    shopId: shop.id,
     rating: typeof shop.rating === "number" ? shop.rating : null,
     drinks: (drinks ?? []).flatMap((drink) => {
       const name = typeof drink.name === "string" ? drink.name.trim() : "";
