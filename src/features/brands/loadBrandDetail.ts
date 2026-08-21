@@ -1,7 +1,11 @@
 import { unstable_cache } from "next/cache";
 import { createPublicClient } from "@/utils/supabase/public";
 import { emptyProfileFacts, parseProfileFacts } from "./parseProfileFacts";
-import type { BrandDetail, BrandGalleryPhoto, BrandProfileFacts } from "./types";
+import type {
+  BrandDetail,
+  BrandGalleryPhoto,
+  BrandProfileFacts,
+} from "./types";
 
 type CatalogRow = {
   slug: string | null;
@@ -97,17 +101,19 @@ async function loadBrandGallery(slug: string): Promise<BrandGalleryPhoto[]> {
 
   if (error || !data) return [];
 
-  return (data as GalleryRow[])
-    .filter((row) => {
-      if (!row.id || !row.image_path?.trim()) return false;
-      if (row.visibility && row.visibility !== "public") return false;
-      return true;
-    })
-    .map((row) => ({
-      id: row.id as string,
-      image_path: row.image_path!.trim(),
-      comment: asTrimmed(row.comment),
-    }));
+  return (data as GalleryRow[]).flatMap((row) => {
+    const id = row.id;
+    const imagePath = row.image_path?.trim();
+    if (!id || !imagePath) return [];
+    if (row.visibility && row.visibility !== "public") return [];
+    return [
+      {
+        id,
+        image_path: imagePath,
+        comment: asTrimmed(row.comment),
+      },
+    ];
+  });
 }
 
 export const getCachedBrandDetail = unstable_cache(
