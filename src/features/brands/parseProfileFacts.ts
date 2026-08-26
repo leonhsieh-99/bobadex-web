@@ -117,6 +117,18 @@ export function formatFactDate(value: string | null | undefined) {
   }).format(date);
 }
 
+export function isObservedFact(fact: { label: string; value: string }) {
+  const label = fact.label.trim().toLowerCase();
+  if (
+    label === "observed at" ||
+    label === "observed" ||
+    label === "last observed"
+  ) {
+    return true;
+  }
+  return label.includes("observed") && Boolean(formatFactDate(fact.value));
+}
+
 function asRecord(value: unknown): Record<string, unknown> | null {
   if (!value) return null;
   if (typeof value === "string") {

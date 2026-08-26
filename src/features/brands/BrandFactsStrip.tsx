@@ -1,10 +1,9 @@
 import { originEyebrow } from "@/features/home/chips";
-import { formatFactDate } from "./parseProfileFacts";
+import { formatFactDate, isObservedFact } from "./parseProfileFacts";
 import type { BrandDetail, BrandFact } from "./types";
 
 export default function BrandFactsStrip({ brand }: { brand: BrandDetail }) {
-  const items = factItems(brand);
-  const observed = formatFactDate(brand.facts.observed_at);
+  const { items, observed } = factItems(brand);
   if (items.length === 0 && !observed) return null;
 
   return (
@@ -43,8 +42,10 @@ export default function BrandFactsStrip({ brand }: { brand: BrandDetail }) {
   );
 }
 
-function factItems(brand: BrandDetail): BrandFact[] {
+function factItems(brand: BrandDetail) {
   const items: BrandFact[] = [];
+  let observed = formatFactDate(brand.facts.observed_at);
+
   const founded = originEyebrow(brand.facts);
   if (founded) {
     items.push({ label: "Founded", value: founded.replace(/^Founded\s+/, "") });
@@ -63,8 +64,12 @@ function factItems(brand: BrandDetail): BrandFact[] {
   }
 
   for (const extra of brand.facts.extras) {
+    if (isObservedFact(extra)) {
+      observed = observed ?? formatFactDate(extra.value);
+      continue;
+    }
     items.push(extra);
   }
 
-  return items;
+  return { items, observed };
 }

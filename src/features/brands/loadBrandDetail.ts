@@ -118,7 +118,7 @@ async function loadBrandGallery(slug: string): Promise<BrandGalleryPhoto[]> {
 
 export const getCachedBrandDetail = unstable_cache(
   loadBrandFacts,
-  ["brand-detail"],
+  ["brand-detail", "v2"],
   { revalidate: 60 * 60 },
 );
 
