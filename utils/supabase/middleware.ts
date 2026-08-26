@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { AUTH_ENABLED } from "@/features/auth/authEnabled";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -47,14 +48,16 @@ export async function updateSession(request: NextRequest) {
     path.startsWith("/favicon");
 
   if (!user && !isPublic) {
-    const full = request.nextUrl.pathname + request.nextUrl.search;
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
-    url.search = `?next=${encodeURIComponent(full)}`;
+    url.pathname = AUTH_ENABLED ? "/auth/login" : "/";
+    url.search = AUTH_ENABLED
+      ? `?next=${encodeURIComponent(path + request.nextUrl.search)}`
+      : "";
     return NextResponse.redirect(url);
   }
 
   if (
+    AUTH_ENABLED &&
     user &&
     (path === "/auth/login" || path === "/login" || path === "/auth")
   ) {

@@ -1,13 +1,16 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import { SearchParams } from "next/dist/server/request/search-params";
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation"
+import { AUTH_ENABLED } from "@/features/auth/authEnabled"
 
 import { createClient } from "@/utils/supabase/server";
 
 export async function login(formData: FormData) {
-  const supabase = await createClient();
+  if (!AUTH_ENABLED) redirect("/auth/login")
+
+  const supabase = await createClient()
+
 
   const data = {
     email: formData.get("email") as string,
@@ -26,7 +29,9 @@ export async function login(formData: FormData) {
 }
 
 export async function signup(formData: FormData) {
-  const supabase = await createClient();
+  if (!AUTH_ENABLED) redirect("/auth/login")
+
+  const supabase = await createClient()
 
   const data = {
     name: formData.get("name") as string,
