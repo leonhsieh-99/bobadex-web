@@ -24,7 +24,20 @@ const HERO_KEYS = new Set([
   "citations",
   "confidence",
   "raw",
+  "observed_at",
+  "observedAt",
+  "last_observed",
+  "last_observed_at",
+  "observed",
 ]);
+
+const OBSERVED_KEYS = [
+  "observed_at",
+  "last_observed_at",
+  "last_observed",
+  "observedAt",
+  "observed",
+] as const;
 
 const EXTRA_LABELS: Record<string, string> = {
   headquarters: "Headquarters",
@@ -38,6 +51,7 @@ const EXTRA_LABELS: Record<string, string> = {
   estimated_locations: "Locations",
   origin_country: "Origin",
   country_of_origin: "Origin",
+  business_type: "Business type",
 };
 
 export function emptyProfileFacts(): BrandProfileFacts {
@@ -50,6 +64,7 @@ export function emptyProfileFacts(): BrandProfileFacts {
     product_categories: [],
     aliases: [],
     extras: [],
+    observed_at: null,
   };
 }
 
@@ -85,7 +100,21 @@ export function parseProfileFacts(raw: unknown): BrandProfileFacts {
     product_categories: asStringArray(facts.product_categories),
     aliases: asStringArray(facts.aliases ?? facts.also_known_as ?? facts.aka),
     extras,
+    observed_at: firstObservedAt(facts),
   };
+}
+
+export function formatFactDate(value: string | null | undefined) {
+  const raw = value?.trim();
+  if (!raw || !/^\d{4}-\d{2}-\d{2}/.test(raw)) return null;
+  const date = new Date(raw);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
 }
 
 function asRecord(value: unknown): Record<string, unknown> | null {
@@ -145,18 +174,35 @@ function asMarketPresence(value: unknown): MarketPresence[] {
   return places;
 }
 
+function firstObservedAt(facts: Record<string, unknown>) {
+  for (const key of OBSERVED_KEYS) {
+    const raw = asTrimmedString(facts[key]);
+    if (raw && formatFactDate(raw)) return raw;
+  }
+  return null;
+}
+
 function renderExtraValue(value: unknown): string | null {
   if (typeof value === "number" && Number.isFinite(value)) {
     return String(value);
   }
   if (typeof value === "string") {
-    return asTrimmedString(value);
+    const trimmed = asTrimmedString(value);
+    if (!trimmed) return null;
+    return formatFactDate(trimmed) ?? humanizeToken(trimmed);
   }
   if (Array.isArray(value)) {
-    const items = asStringArray(value);
+    const items = asStringArray(value).map(
+      (item) => formatFactDate(item) ?? humanizeToken(item),
+    );
     return items.length ? items.slice(0, 4).join(", ") : null;
   }
   return null;
+}
+
+function humanizeToken(value: string) {
+  if (!/^[a-z0-9]+([_/-][a-z0-9]+)+$/i.test(value)) return value;
+  return humanizeKey(value);
 }
 
 function humanizeKey(key: string) {

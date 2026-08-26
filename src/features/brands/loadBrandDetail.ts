@@ -193,7 +193,8 @@ function hasAnyFacts(facts: BrandProfileFacts) {
       facts.known_for.length ||
       facts.product_categories.length ||
       facts.aliases.length ||
-      facts.extras.length,
+      facts.extras.length ||
+      facts.observed_at,
   );
 }
 

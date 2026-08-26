@@ -36,6 +36,7 @@ export type BrandProfileFacts = {
   product_categories: string[];
   aliases: string[];
   extras: BrandFact[];
+  observed_at: string | null;
 };
 
 export type BrandDetail = {
