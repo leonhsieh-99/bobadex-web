@@ -2,11 +2,13 @@
 
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import { SearchParams } from "next/dist/server/request/search-params"
+import { AUTH_ENABLED } from "@/features/auth/authEnabled"
 
 import { createClient } from "@/utils/supabase/server"
 
 export async function login(formData: FormData) {
+  if (!AUTH_ENABLED) redirect("/auth/login")
+
   const supabase = await createClient()
 
 
@@ -27,6 +29,8 @@ export async function login(formData: FormData) {
 }
 
 export async function signup(formData: FormData) {
+  if (!AUTH_ENABLED) redirect("/auth/login")
+
   const supabase = await createClient()
 
   const data = {
