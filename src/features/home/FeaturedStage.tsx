@@ -2,6 +2,7 @@
 
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import Link from "next/link";
 import {
   type KeyboardEvent,
   type ReactNode,
@@ -12,39 +13,31 @@ import {
 } from "react";
 import { BrandMark } from "@/features/brands/BrandMark";
 import { marketChips, originEyebrow, tagChips } from "./chips";
-import { featuredBrands, INITIAL_FEATURED_SLUG } from "./featuredBrands";
 import type { FeaturedBrand } from "./types";
 
 export const FEATURED_ROTATE_MS = 10_000;
 
-export default function FeaturedStage({
-  selectedSlug,
-  onSelect,
-}: {
-  selectedSlug: string;
-  onSelect: (slug: string) => void;
-}) {
+export default function FeaturedStage({ brands }: { brands: FeaturedBrand[] }) {
   const reduce = useReducedMotion() ?? false;
   const [tabHidden, setTabHidden] = useState(false);
+  const [selectedSlug, setSelectedSlug] = useState(brands[0]?.slug ?? "");
   const selectedIndex = Math.max(
     0,
-    featuredBrands.findIndex((item) => item.slug === selectedSlug),
+    brands.findIndex((item) => item.slug === selectedSlug),
   );
   const selectedIndexRef = useRef(selectedIndex);
   selectedIndexRef.current = selectedIndex;
-  const brand =
-    featuredBrands[selectedIndex] ??
-    featuredBrands.find((item) => item.slug === INITIAL_FEATURED_SLUG);
+  const brand = brands[selectedIndex] ?? brands[0];
 
   const selectByOffset = useCallback(
     (offset: number) => {
-      const next =
-        (selectedIndex + offset + featuredBrands.length) %
-        featuredBrands.length;
-      const nextBrand = featuredBrands[next];
-      if (nextBrand) onSelect(nextBrand.slug);
+      if (brands.length === 0) return;
+      const current = selectedIndexRef.current;
+      const next = (current + offset + brands.length) % brands.length;
+      const nextBrand = brands[next];
+      if (nextBrand) setSelectedSlug(nextBrand.slug);
     },
-    [onSelect, selectedIndex],
+    [brands],
   );
 
   useEffect(() => {
@@ -55,15 +48,15 @@ export default function FeaturedStage({
   }, []);
 
   useEffect(() => {
-    if (tabHidden) return;
+    if (tabHidden || brands.length < 2) return;
     const timer = window.setInterval(() => {
       const current = selectedIndexRef.current;
-      const next = (current + 1) % featuredBrands.length;
-      const nextBrand = featuredBrands[next];
-      if (nextBrand) onSelect(nextBrand.slug);
+      const next = (current + 1) % brands.length;
+      const nextBrand = brands[next];
+      if (nextBrand) setSelectedSlug(nextBrand.slug);
     }, FEATURED_ROTATE_MS);
     return () => window.clearInterval(timer);
-  }, [tabHidden, onSelect]);
+  }, [brands, tabHidden]);
 
   if (!brand) return null;
 
@@ -89,7 +82,7 @@ export default function FeaturedStage({
       className="scroll-mt-24"
       onKeyDown={onKeyDown}
     >
-      <div className="mb-6 flex items-end justify-between gap-4">
+      <div className="mb-6 flex items-start justify-between gap-4">
         <div>
           <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] opacity-60">
             Today&apos;s catalogue picks
@@ -100,6 +93,10 @@ export default function FeaturedStage({
           >
             Featured brands
           </h2>
+          <p className="mt-2 max-w-xl text-sm leading-6 opacity-55">
+            Brands with at least five mapped shops and a finished dossier. Five
+            a day; the list reshuffles if the week runs through the pool.
+          </p>
         </div>
         <div className="hidden items-center gap-2 sm:flex">
           <CycleButton
@@ -136,7 +133,12 @@ export default function FeaturedStage({
                 </p>
               ) : null}
               <h3 className="text-3xl font-black tracking-[-0.035em] sm:text-4xl">
-                {brand.display}
+                <Link
+                  href={`/brands/${brand.slug}`}
+                  className="hover:opacity-80"
+                >
+                  {brand.display}
+                </Link>
               </h3>
               <p className="mt-3 max-w-2xl text-sm leading-6 opacity-70 sm:text-base sm:leading-7">
                 {brand.public_summary}
@@ -169,13 +171,13 @@ export default function FeaturedStage({
       </div>
 
       <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
-        {featuredBrands.map((item) => {
+        {brands.map((item) => {
           const active = item.slug === brand.slug;
           return (
             <button
               key={item.slug}
               type="button"
-              onClick={() => onSelect(item.slug)}
+              onClick={() => setSelectedSlug(item.slug)}
               aria-pressed={active}
               aria-label={`Show ${item.display}`}
               className={`flex min-w-36 flex-1 items-center gap-3 rounded-[1.4rem] border p-2.5 text-left transition-transform hover:-translate-y-0.5 ${

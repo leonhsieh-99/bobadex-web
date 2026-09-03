@@ -2,17 +2,18 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import MilkTeaCup from "@/features/about/MilkTeaCup";
 import PublicShell from "@/shared/layout/PublicShell";
+import {
+  OSM_COPYRIGHT_URL,
+  PRIVACY_URL,
+  SUPPORT_EMAIL,
+  TERMS_URL,
+} from "@/shared/site";
 
 export const metadata: Metadata = {
   title: "About — Bobadex",
   description:
     "Bobadex is your personal boba shop and drink tracker, plus a public catalogue of brands.",
 };
-
-const PRIVACY_URL = "https://leonhsieh-99.github.io/bobadex-legal/privacy.html";
-const TERMS_URL = "https://leonhsieh-99.github.io/bobadex-legal/terms.html";
-const SUPPORT_EMAIL = "leonchsieh@gmail.com";
-const OSM_URL = "https://www.openstreetmap.org/copyright";
 
 export default function AboutPage() {
   return (
@@ -109,7 +110,7 @@ export default function AboutPage() {
             </div>
             <p className="mt-4 text-xs opacity-60">
               <a
-                href={OSM_URL}
+                href={OSM_COPYRIGHT_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="underline"

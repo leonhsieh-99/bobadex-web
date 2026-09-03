@@ -1,8 +1,13 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import dynamic from "next/dynamic";
 import { useState } from "react";
+
+const QueryDevtools =
+  process.env.NODE_ENV === "development"
+    ? dynamic(() => import("./QueryDevtools"), { ssr: false })
+    : () => null;
 
 export default function AppProviders({
   children,
@@ -14,7 +19,7 @@ export default function AppProviders({
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 1000 * 60 * 2, // 2 min
+            staleTime: 1000 * 60 * 2,
             gcTime: 30 * 60 * 1000,
             refetchOnWindowFocus: false,
             retry: 1,
@@ -26,7 +31,7 @@ export default function AppProviders({
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      <QueryDevtools />
     </QueryClientProvider>
   );
 }

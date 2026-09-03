@@ -45,7 +45,9 @@ export async function updateSession(request: NextRequest) {
     path.startsWith("/login") ||
     path.startsWith("/auth") ||
     path.startsWith("/error") ||
-    path.startsWith("/favicon");
+    path.startsWith("/favicon") ||
+    path.includes("/opengraph-image") ||
+    path.includes("/twitter-image");
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone();

@@ -1,65 +1,35 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
+import { LibraryBig, Sparkles } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { AUTH_ENABLED } from "@/features/auth/authEnabled";
 import { BrandMark } from "@/features/brands/BrandMark";
-import type { BrandIndexItem } from "@/features/brands/loadBrandIndex";
 import BrandTypeahead from "./BrandTypeahead";
-import { pickEvenSpread } from "./pickEvenSpread";
-
-const INNER_COUNT = 8;
-const OUTER_COUNT = 14;
-
-function ringPosition(
-  index: number,
-  count: number,
-  radiusX: number,
-  radiusY: number,
-  rotation: number,
-) {
-  const angle = (index / count) * Math.PI * 2 + rotation;
-  return {
-    left: `${50 + Math.cos(angle) * radiusX}%`,
-    top: `${48 + Math.sin(angle) * radiusY}%`,
-  };
-}
+import type { BrandSearchItem, ConstellationMark } from "./constellation";
 
 export default function HomeHero({
-  brands,
+  constellation,
+  searchBrands,
+  brandCount,
   featuredSlugs,
 }: {
-  brands: BrandIndexItem[];
+  constellation: ConstellationMark[];
+  searchBrands: BrandSearchItem[];
+  brandCount: number;
   featuredSlugs: string[];
 }) {
   const reduce = useReducedMotion() ?? false;
   const [query, setQuery] = useState("");
   const featured = useMemo(() => new Set(featuredSlugs), [featuredSlugs]);
-
-  const constellation = useMemo(() => {
-    const inner = pickEvenSpread(brands, INNER_COUNT).map((brand, index) => ({
-      brand,
-      position: ringPosition(index, INNER_COUNT, 28, 30, 0.2),
-      ring: "inner" as const,
-    }));
-    const outer = pickEvenSpread(brands.slice().reverse(), OUTER_COUNT).map(
-      (brand, index) => ({
-        brand,
-        position: ringPosition(index, OUTER_COUNT, 46, 44, 0.4),
-        ring: "outer" as const,
-      }),
-    );
-    return [...inner, ...outer];
-  }, [brands]);
-
   const normalizedQuery = query.trim().toLowerCase();
 
   return (
     <header className="relative mb-16 min-h-[34rem] overflow-hidden sm:min-h-[40rem]">
       <div className="pointer-events-none absolute inset-0">
-        {constellation.map(({ brand, position, ring }, index) => {
+        {constellation.map((brand, index) => {
           const matches =
             !normalizedQuery ||
             brand.display.toLowerCase().includes(normalizedQuery) ||
@@ -71,11 +41,11 @@ export default function HomeHero({
 
           return (
             <motion.div
-              key={`${brand.slug}-${ring}`}
+              key={`${brand.slug}-${brand.ring}`}
               className={`pointer-events-auto absolute z-0 ${
-                ring === "outer" ? "hidden sm:block" : "block"
+                brand.ring === "outer" ? "hidden sm:block" : "block"
               }`}
-              style={position}
+              style={{ left: brand.left, top: brand.top }}
               initial={reduce ? false : { opacity: 0, scale: 0.55 }}
               animate={{ opacity: matches ? 1 : 0.18, scale: 1 }}
               transition={{
@@ -108,7 +78,6 @@ export default function HomeHero({
                     name={brand.display}
                     size={256}
                     displaySize={56}
-                    eager
                   />
                 </span>
               </Link>
@@ -127,22 +96,34 @@ export default function HomeHero({
           priority
         />
         <p className="mt-3 max-w-xl text-pretty text-base leading-7 opacity-70 sm:text-lg">
-          Open the catalogue. Find a brand, then start your own dex.
+          {AUTH_ENABLED
+            ? "Open the catalogue. Find a brand, then start your own dex."
+            : "Open the catalogue. Find a brand."}
         </p>
 
-        <BrandTypeahead brands={brands} onQuery={setQuery} />
+        <BrandTypeahead brands={searchBrands} onQuery={setQuery} />
 
-        <a
-          href="/auth/signup"
-          className="mt-5 flex items-center gap-3 rounded-full border border-[#2b241f]/10 bg-white/70 px-5 py-3 text-sm font-semibold shadow-sm backdrop-blur transition-transform hover:-translate-y-0.5"
-        >
-          <Sparkles className="size-4" aria-hidden="true" />
-          Sign up to track your favorites
-        </a>
+        {AUTH_ENABLED ? (
+          <a
+            href="/auth/signup"
+            className="mt-5 flex items-center gap-3 rounded-full border border-[#2b241f]/10 bg-white/70 px-5 py-3 text-sm font-semibold shadow-sm backdrop-blur transition-transform hover:-translate-y-0.5"
+          >
+            <Sparkles className="size-4" aria-hidden="true" />
+            Sign up to track your favorites
+          </a>
+        ) : (
+          <Link
+            href="/brands"
+            className="mt-5 flex items-center gap-3 rounded-full border border-[#2b241f]/10 bg-white/70 px-5 py-3 text-sm font-semibold shadow-sm backdrop-blur transition-transform hover:-translate-y-0.5"
+          >
+            <LibraryBig className="size-4" aria-hidden="true" />
+            Browse the catalogue
+          </Link>
+        )}
 
-        {brands.length > 0 ? (
+        {brandCount > 0 ? (
           <p className="mt-5 text-xs font-bold uppercase tracking-[0.2em] opacity-55">
-            {brands.length} brands in the dex
+            {brandCount} brands in the dex
           </p>
         ) : null}
       </div>

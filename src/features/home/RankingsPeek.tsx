@@ -1,10 +1,12 @@
 "use client";
 
-import { ArrowRight, LogIn, Trophy } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { BrandRankList } from "@/features/rankings/BrandRankList";
+import type { BrandRanking } from "@/features/rankings/types";
 import { Reveal } from "./Reveal";
 
-export default function RankingsPeek() {
+export default function RankingsPeek({ brands }: { brands: BrandRanking[] }) {
   return (
     <Reveal>
       <section
@@ -23,6 +25,9 @@ export default function RankingsPeek() {
             >
               Rankings
             </h2>
+            <p className="mt-2 max-w-xl text-sm leading-6 opacity-70 sm:text-base">
+              Top rated brands with at least three reviews.
+            </p>
           </div>
           <Link
             href="/rankings"
@@ -33,27 +38,15 @@ export default function RankingsPeek() {
           </Link>
         </div>
 
-        <div className="flex flex-col items-start gap-5 rounded-[2rem] border border-[#2b241f]/10 bg-white/50 p-8 sm:flex-row sm:items-center sm:p-10">
-          <div className="flex size-16 shrink-0 items-center justify-center rounded-[1.4rem] bg-[#fff3c7]">
-            <Trophy className="size-7" aria-hidden="true" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xl font-black tracking-[-0.03em]">
-              Rankings unlock as people log shops
-            </p>
-            <p className="mt-2 max-w-xl text-sm leading-6 opacity-70 sm:text-base">
-              Community brand rankings will land here once enough drinkers have
-              rated shops.
-            </p>
-          </div>
-          <a
-            href="/auth/login?next=/dashboard"
-            className="inline-flex items-center gap-2 rounded-full border border-[#2b241f]/10 bg-white px-5 py-3 text-sm font-semibold shadow-sm transition-transform hover:-translate-y-0.5"
-          >
-            <LogIn className="size-4" aria-hidden="true" />
-            Sign in to rank
-          </a>
-        </div>
+        <BrandRankList brands={brands} by="rating" compact />
+
+        <Link
+          href="/rankings"
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold opacity-70 sm:hidden"
+        >
+          Open rankings
+          <ArrowRight className="size-4" />
+        </Link>
       </section>
     </Reveal>
   );

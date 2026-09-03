@@ -1,32 +1,41 @@
-"use client";
-
-import { useState } from "react";
-import type { BrandIndexItem } from "@/features/brands/loadBrandIndex";
+import type { BrandRanking } from "@/features/rankings/types";
 import AchievementShowcase from "./AchievementShowcase";
+import type { BrandSearchItem, ConstellationMark } from "./constellation";
 import FeaturedStage from "./FeaturedStage";
-import { featuredBrands, INITIAL_FEATURED_SLUG } from "./featuredBrands";
 import HomeHero from "./HomeHero";
 import RankingsPeek from "./RankingsPeek";
 import { Reveal } from "./Reveal";
+import type { FeaturedBrand } from "./types";
 
-export default function HomePage({ brands }: { brands: BrandIndexItem[] }) {
-  const [featuredSlug, setFeaturedSlug] = useState(INITIAL_FEATURED_SLUG);
-
+export default function HomePage({
+  constellation,
+  searchBrands,
+  brandCount,
+  featuredBrands,
+  topBrands,
+}: {
+  constellation: ConstellationMark[];
+  searchBrands: BrandSearchItem[];
+  brandCount: number;
+  featuredBrands: FeaturedBrand[];
+  topBrands: BrandRanking[];
+}) {
   return (
     <>
       <HomeHero
-        brands={brands}
+        constellation={constellation}
+        searchBrands={searchBrands}
+        brandCount={brandCount}
         featuredSlugs={featuredBrands.map((brand) => brand.slug)}
       />
       <div className="space-y-20">
-        <Reveal>
-          <FeaturedStage
-            selectedSlug={featuredSlug}
-            onSelect={setFeaturedSlug}
-          />
-        </Reveal>
+        {featuredBrands.length > 0 ? (
+          <Reveal>
+            <FeaturedStage brands={featuredBrands} />
+          </Reveal>
+        ) : null}
         <AchievementShowcase />
-        <RankingsPeek />
+        <RankingsPeek brands={topBrands} />
       </div>
     </>
   );
