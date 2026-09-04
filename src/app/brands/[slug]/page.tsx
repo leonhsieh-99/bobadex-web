@@ -9,9 +9,15 @@ import {
   getCachedBrandDetail,
   getCachedBrandGallery,
 } from "@/features/brands/loadBrandDetail";
+import { getCachedBrandIndex } from "@/features/brands/loadBrandIndex";
 import PublicShell from "@/shared/layout/PublicShell";
 
 export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const brands = await getCachedBrandIndex();
+  return brands.map((brand) => ({ slug: brand.slug }));
+}
 
 export async function generateMetadata({
   params,
@@ -21,11 +27,15 @@ export async function generateMetadata({
   const { slug } = await params;
   const brand = await getCachedBrandDetail(slug);
   if (!brand) return { title: "Brand — Bobadex" };
+  const title = `${brand.display} — Bobadex`;
+  const description =
+    brand.public_summary ??
+    `The ${brand.display} page in the Bobadex catalogue.`;
   return {
-    title: `${brand.display} — Bobadex`,
-    description:
-      brand.public_summary ??
-      `The ${brand.display} page in the Bobadex catalogue.`,
+    title,
+    description,
+    openGraph: { title, description },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

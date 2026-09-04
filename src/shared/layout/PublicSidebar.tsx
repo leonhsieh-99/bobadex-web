@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { AUTH_ENABLED } from "@/features/auth/authEnabled";
 import UserMark from "@/shared/layout/UserMark";
 import { userInitials } from "@/shared/layout/userInitials";
 import { createClient } from "@/utils/supabase/client";
@@ -30,6 +31,7 @@ const navItems = [
 const memberItems = [
   { name: "My Bobadex", icon: UserRound, href: "/dashboard" },
   { name: "Profile", icon: CircleUserRound, href: "/dashboard/profile" },
+  { name: "Settings", icon: Settings, href: "/dashboard/settings" },
 ] as const;
 
 const itemClassName =
@@ -49,6 +51,8 @@ export default function PublicSidebar() {
   }>({ imagePath: null, initials: "G" });
 
   useEffect(() => {
+    if (!AUTH_ENABLED) return;
+
     const supabase = createClient();
 
     async function loadViewer() {
@@ -144,11 +148,6 @@ export default function PublicSidebar() {
             </span>
           );
         })}
-
-        <button type="button" className={itemClassName}>
-          <Settings className="size-[18px]" aria-hidden="true" />
-          Settings
-        </button>
 
         {!isAuthenticated && (
           <Link

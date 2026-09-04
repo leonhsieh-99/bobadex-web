@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { BrandMark } from "@/features/brands/BrandMark";
-import type { BrandIndexItem } from "@/features/brands/loadBrandIndex";
+import type { BrandSearchItem } from "./constellation";
 
 const MAX_RESULTS = 8;
 
-function matchesQuery(brand: BrandIndexItem, query: string) {
+function matchesQuery(brand: BrandSearchItem, query: string) {
   if (brand.display.toLowerCase().includes(query)) return true;
   if (brand.slug.toLowerCase().includes(query)) return true;
   return brand.aliases.some((alias) => alias.toLowerCase().includes(query));
@@ -19,7 +19,7 @@ export default function BrandTypeahead({
   brands,
   onQuery,
 }: {
-  brands: BrandIndexItem[];
+  brands: BrandSearchItem[];
   onQuery?: (query: string) => void;
 }) {
   const router = useRouter();
