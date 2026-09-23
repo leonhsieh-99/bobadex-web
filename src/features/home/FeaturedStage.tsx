@@ -190,6 +190,7 @@ export default function FeaturedStage({ brands }: { brands: FeaturedBrand[] }) {
                 <BrandMark
                   iconPath={item.icon_path}
                   name={item.display}
+                  slug={item.slug}
                   size={256}
                   displaySize={44}
                   eager
@@ -221,6 +222,7 @@ function StageVisual({ brand }: { brand: FeaturedBrand }) {
         <BrandMark
           iconPath={brand.icon_path}
           name={brand.display}
+          slug={brand.slug}
           size={512}
           displaySize={176}
           priority

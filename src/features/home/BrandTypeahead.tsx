@@ -112,6 +112,7 @@ export default function BrandTypeahead({
                     <BrandMark
                       iconPath={brand.icon_path}
                       name={brand.display}
+                      slug={brand.slug}
                       size={256}
                       displaySize={36}
                       eager

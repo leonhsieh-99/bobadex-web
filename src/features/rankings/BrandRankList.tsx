@@ -65,6 +65,7 @@ export function BrandRankList({
                 <BrandMark
                   iconPath={brand.icon_path}
                   name={brand.display}
+                  slug={brand.slug}
                   size={256}
                   displaySize={compact ? 44 : 56}
                   eager={index < 5}

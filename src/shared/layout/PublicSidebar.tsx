@@ -26,12 +26,12 @@ const navItems = [
   { name: "Achievements", icon: Medal, href: "/achievements" },
   { name: "Rankings", icon: Trophy, href: "/rankings" },
   { name: "About", icon: Info, href: "/about" },
+  { name: "Settings", icon: Settings, href: "/settings" },
 ] as const;
 
 const memberItems = [
   { name: "My Bobadex", icon: UserRound, href: "/dashboard" },
   { name: "Profile", icon: CircleUserRound, href: "/dashboard/profile" },
-  { name: "Settings", icon: Settings, href: "/dashboard/settings" },
 ] as const;
 
 const itemClassName =

@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import MilkTeaCup from "@/features/about/MilkTeaCup";
+import {
+  AI_DATA_DISCLOSURE,
+  AI_DATA_HEADING,
+} from "@/features/settings/aiDisclosure";
 import PublicShell from "@/shared/layout/PublicShell";
 import {
   OSM_COPYRIGHT_URL,
@@ -63,15 +68,37 @@ export default function AboutPage() {
             </ul>
           </section>
 
+          <section
+            id="ai-data"
+            className="scroll-mt-24 rounded-[1.8rem] border border-[#2b241f]/10 bg-white/50 p-6"
+          >
+            <h2 className="text-lg font-black tracking-[-0.03em]">
+              {AI_DATA_HEADING}
+            </h2>
+            <p className="mt-3 text-sm leading-6 opacity-75">
+              {AI_DATA_DISCLOSURE}
+            </p>
+            <p className="mt-4 text-sm opacity-65">
+              Prefer lettering instead of mascots? Switch Brand visuals in{" "}
+              <Link
+                href="/settings#brand-visuals"
+                className="font-semibold underline"
+              >
+                Settings
+              </Link>
+              .
+            </p>
+          </section>
+
           <section className="rounded-[1.8rem] border border-[#2b241f]/10 bg-white/50 p-6">
             <h2 className="text-lg font-black tracking-[-0.03em]">
               Credits &amp; artwork
             </h2>
             <p className="mt-3 text-sm leading-6 opacity-75">
-              Brand mascots and icons on Bobadex are unofficial. Some artwork is
-              AI-generated or AI-assisted, and none of it is endorsed by the
-              brands themselves. If a shop or brand asks us not to use a mascot,
-              we replace it with initials. Location data includes OpenStreetMap.
+              Brand mascots on Bobadex are unofficial interpretations, not
+              official artwork or endorsements. If a shop or brand asks us not
+              to use a mascot, we use lettering instead. Location data includes
+              OpenStreetMap.
             </p>
           </section>
 

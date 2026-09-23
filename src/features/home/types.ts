@@ -7,7 +7,7 @@ export type MarketPresence = {
 export type FeaturedBrand = {
   slug: string;
   display: string;
-  icon_path: string;
+  icon_path: string | null;
   public_summary: string;
   founded_place?: string | null;
   founded_year?: number | string | null;

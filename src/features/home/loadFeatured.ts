@@ -39,8 +39,7 @@ async function loadFeaturedForDay(dayKey: string): Promise<FeaturedBrand[]> {
   const requested = dayKeyToCalendar(dayKey) ?? pacificCalendar();
   const rankings = await getCachedBrandRankings();
   const withStores = rankings.filter(
-    (brand) =>
-      brand.store_count >= MIN_FEATURED_STORES && Boolean(brand.icon_path),
+    (brand) => brand.store_count >= MIN_FEATURED_STORES,
   );
   if (withStores.length === 0) return [];
 
@@ -78,8 +77,7 @@ async function loadFeaturedForDay(dayKey: string): Promise<FeaturedBrand[]> {
     const brand = bySlug.get(slug);
     const profile = profiles.get(slug);
     const summary = asTrimmed(profile?.public_summary);
-    const iconPath = brand?.icon_path;
-    if (!brand || !profile || !summary || !iconPath) return [];
+    if (!brand || !profile || !summary) return [];
 
     const facts = parseProfileFacts(profile.profile_facts);
     const palette = brandAccentForSlug(slug);
@@ -88,7 +86,7 @@ async function loadFeaturedForDay(dayKey: string): Promise<FeaturedBrand[]> {
       {
         slug,
         display: brand.display,
-        icon_path: iconPath,
+        icon_path: brand.icon_path,
         public_summary: summary,
         founded_place: facts.founded_place,
         founded_year: facts.founded_year,
@@ -114,7 +112,7 @@ function dayKeyToCalendar(dayKey: string) {
 
 const getCachedFeaturedForDay = unstable_cache(
   loadFeaturedForDay,
-  ["featured-brands", "v2"],
+  ["featured-brands", "v3"],
   { revalidate: 60 * 60 },
 );
 

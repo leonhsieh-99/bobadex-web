@@ -13,10 +13,26 @@ export default function PublicFooter() {
     <footer className="mt-16 border-t border-[#2b241f]/10 pt-5 text-xs leading-6 opacity-55 sm:text-sm">
       <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className="font-semibold opacity-80">Bobadex</span>
-        <a href={PRIVACY_URL} target="_blank" rel="noreferrer" className={linkClass}>
+        <a href="/settings" className={linkClass}>
+          Settings
+        </a>
+        <a href="/about#ai-data" className={linkClass}>
+          AI &amp; Data
+        </a>
+        <a
+          href={PRIVACY_URL}
+          target="_blank"
+          rel="noreferrer"
+          className={linkClass}
+        >
           Privacy
         </a>
-        <a href={TERMS_URL} target="_blank" rel="noreferrer" className={linkClass}>
+        <a
+          href={TERMS_URL}
+          target="_blank"
+          rel="noreferrer"
+          className={linkClass}
+        >
           Terms
         </a>
         <a

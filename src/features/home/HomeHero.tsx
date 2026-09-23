@@ -76,6 +76,7 @@ export default function HomeHero({
                   <BrandMark
                     iconPath={brand.icon_path}
                     name={brand.display}
+                    slug={brand.slug}
                     size={256}
                     displaySize={56}
                   />

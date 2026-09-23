@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { cookies } from "next/headers";
 import { AUTH_ENABLED } from "@/features/auth/authEnabled";
+import { BrandVisualsProvider } from "@/features/settings/BrandVisualsProvider";
+import {
+  BRAND_VISUALS_COOKIE,
+  parseBrandVisuals,
+} from "@/features/settings/brandVisuals";
 import { SITE_URL } from "@/shared/site";
 import "./globals.css";
 
@@ -36,14 +42,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const body = AUTH_ENABLED ? await wrapWithProviders(children) : children;
+  const cookieStore = await cookies();
+  const brandVisuals = parseBrandVisuals(
+    cookieStore.get(BRAND_VISUALS_COOKIE)?.value,
+  );
+  const inner = AUTH_ENABLED ? await wrapWithProviders(children) : children;
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`min-h-screen flex flex-col ${geistSans.variable} antialiased`}
       >
-        {body}
+        <BrandVisualsProvider initial={brandVisuals}>
+          {inner}
+        </BrandVisualsProvider>
       </body>
     </html>
   );

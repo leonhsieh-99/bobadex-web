@@ -39,6 +39,7 @@ export async function updateSession(request: NextRequest) {
   const isPublic =
     path === "/" ||
     path === "/about" ||
+    path === "/settings" ||
     path.startsWith("/brands") ||
     path === "/achievements" ||
     path === "/rankings" ||

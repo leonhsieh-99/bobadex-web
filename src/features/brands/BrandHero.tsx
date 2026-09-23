@@ -41,14 +41,12 @@ export default function BrandHero({ brand }: { brand: BrandDetail }) {
           <BrandMark
             iconPath={brand.icon_path}
             name={brand.display}
+            slug={brand.slug}
             size={512}
             displaySize={176}
             priority
           />
         </div>
-        <p className="relative mt-4 max-w-[14rem] text-center text-[0.7rem] leading-4 font-medium opacity-55">
-          Unofficial art. Initials if a brand objects.
-        </p>
       </div>
 
       <div className="flex flex-col justify-center border-t border-[#2b241f]/10 bg-white/30 p-7 backdrop-blur-[2px] md:border-l md:border-t-0 md:p-10">
