@@ -94,8 +94,8 @@ export default function FeaturedStage({ brands }: { brands: FeaturedBrand[] }) {
             Featured brands
           </h2>
           <p className="mt-2 max-w-xl text-sm leading-6 opacity-55">
-            Brands with at least five mapped shops and a finished dossier. Five
-            a day; the list reshuffles if the week runs through the pool.
+            Brands with at least five known locations and a finished dossier.
+            Five a day; the list reshuffles if the week runs through the pool.
           </p>
         </div>
         <div className="hidden items-center gap-2 sm:flex">

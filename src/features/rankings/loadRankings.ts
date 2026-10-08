@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 import { AUTH_ENABLED } from "@/features/auth/authEnabled";
 import { createPublicClient } from "@/utils/supabase/public";
 import { createClient } from "@/utils/supabase/server";
+import { communityScore } from "./communityScore";
 import { HOME_RANKING_PREVIEW, rankedBrands } from "./sortBrands";
 import type { BrandRanking, UserBoard, UserRanking } from "./types";
 
@@ -11,6 +12,12 @@ type CatalogRow = {
   icon_path: string | null;
   avg_rating: number | string | null;
   rating_count: number | string | null;
+};
+
+type ShopAggregate = {
+  ratingSum: number;
+  ratingCount: number;
+  collectors: Set<string>;
 };
 
 const PAGE_SIZE = 1000;
@@ -28,7 +35,7 @@ function bumpCount(counts: Map<string, number>, slug: string | null) {
 
 async function countByBrandSlug(
   supabase: ReturnType<typeof createPublicClient>,
-  table: "shops" | "brand_locations",
+  table: "brand_locations",
   statusFilter = false,
 ) {
   const counts = new Map<string, number>();
@@ -62,45 +69,124 @@ async function countByBrandSlug(
   return counts;
 }
 
+async function loadShopAggregates(
+  supabase: ReturnType<typeof createPublicClient>,
+) {
+  const byBrand = new Map<string, ShopAggregate>();
+  let from = 0;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from("shops")
+      .select("brand_slug, user_id, rating")
+      .order("id")
+      .range(from, from + PAGE_SIZE - 1);
+
+    if (error || !data?.length) {
+      if (error && from === 0) return null;
+      break;
+    }
+
+    for (const row of data) {
+      const slug = row.brand_slug as string | null;
+      if (!slug) continue;
+      let aggregate = byBrand.get(slug);
+      if (!aggregate) {
+        aggregate = { ratingSum: 0, ratingCount: 0, collectors: new Set() };
+        byBrand.set(slug, aggregate);
+      }
+      const userId = row.user_id as string | null;
+      if (userId) aggregate.collectors.add(userId);
+      const rating = asNumber(row.rating as number | string | null);
+      if (rating == null) continue;
+      aggregate.ratingSum += rating;
+      aggregate.ratingCount += 1;
+    }
+
+    if (data.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+
+  return byBrand;
+}
+
+function weightedMean(rows: CatalogRow[]) {
+  let sum = 0;
+  let count = 0;
+  for (const row of rows) {
+    const average = asNumber(row.avg_rating);
+    const ratingCount = asNumber(row.rating_count) ?? 0;
+    if (average == null || ratingCount <= 0) continue;
+    sum += average * ratingCount;
+    count += ratingCount;
+  }
+  return count > 0 ? sum / count : 0;
+}
+
 async function loadBrandRankings(): Promise<BrandRanking[]> {
   const supabase = createPublicClient();
-  const [{ data: catalog, error }, shopCounts, storeCounts] = await Promise.all(
-    [
+  const [{ data: catalog, error }, locationCounts, shopAggregates] =
+    await Promise.all([
       supabase
         .from("public_brand_catalog")
         .select("slug, display, icon_path, avg_rating, rating_count"),
-      countByBrandSlug(supabase, "shops"),
       countByBrandSlug(supabase, "brand_locations", true),
-    ],
-  );
+      loadShopAggregates(supabase),
+    ]);
 
   if (error || !catalog) return [];
 
-  return (catalog as CatalogRow[])
-    .filter((row) => Boolean(row.slug && row.display))
-    .map((row) => {
-      const slug = row.slug as string;
-      return {
-        slug,
-        display: row.display as string,
-        icon_path: row.icon_path,
-        avg_rating: asNumber(row.avg_rating),
-        rating_count: asNumber(row.rating_count) ?? 0,
-        shop_count: shopCounts.get(slug) ?? 0,
-        store_count: storeCounts.get(slug) ?? 0,
-      };
-    });
+  const rows = (catalog as CatalogRow[]).filter((row) =>
+    Boolean(row.slug && row.display),
+  );
+
+  let meanRating = 0;
+  if (shopAggregates) {
+    let sum = 0;
+    let count = 0;
+    for (const row of rows) {
+      const aggregate = shopAggregates.get(row.slug as string);
+      if (!aggregate || aggregate.ratingCount <= 0) continue;
+      sum += aggregate.ratingSum;
+      count += aggregate.ratingCount;
+    }
+    meanRating = count > 0 ? sum / count : 0;
+  } else {
+    meanRating = weightedMean(rows);
+  }
+
+  return rows.map((row) => {
+    const slug = row.slug as string;
+    const aggregate = shopAggregates?.get(slug);
+    const ratingCount =
+      aggregate?.ratingCount ?? asNumber(row.rating_count) ?? 0;
+    const average =
+      aggregate && aggregate.ratingCount > 0
+        ? aggregate.ratingSum / aggregate.ratingCount
+        : asNumber(row.avg_rating);
+
+    return {
+      slug,
+      display: row.display as string,
+      icon_path: row.icon_path,
+      avg_rating: ratingCount > 0 ? average : null,
+      rating_count: ratingCount,
+      collector_count: aggregate?.collectors.size ?? 0,
+      location_count: locationCounts.get(slug) ?? 0,
+      community_score: communityScore(average, ratingCount, meanRating),
+    };
+  });
 }
 
 export const getCachedBrandRankings = unstable_cache(
   loadBrandRankings,
-  ["brand-rankings"],
+  ["brand-rankings-v2"],
   { revalidate: 60 * 60 },
 );
 
 export async function getHomepageBrandRankings() {
   const brands = await getCachedBrandRankings();
-  return rankedBrands(brands, "rating").slice(0, HOME_RANKING_PREVIEW);
+  return rankedBrands(brands, "locations").slice(0, HOME_RANKING_PREVIEW);
 }
 
 function parseUserRanking(row: Record<string, unknown>): UserRanking | null {

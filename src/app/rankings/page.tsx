@@ -10,7 +10,7 @@ import PublicShell from "@/shared/layout/PublicShell";
 export const metadata: Metadata = {
   title: "Rankings — Bobadex",
   description:
-    "Community rankings of boba brands, based on shops people have actually rated.",
+    "Public brand rankings: most locations, community score, highest rated, and most collected.",
 };
 
 export const revalidate = 3600;
@@ -38,9 +38,9 @@ export default async function RankingsPage({
           What the community is sipping
         </h1>
         <p className="mt-4 text-base leading-7 opacity-70 sm:text-lg">
-          Brands are public. Rating uses the same bar as the app: highest
-          average, at least three rated shops. You can also sort by logged shops
-          or mapped stores. Drinker rankings stay behind an account.
+          Brands are public. This board opens on most locations. Community
+          score, highest rated, and most collected are the other ways to sort.
+          Drinker rankings stay behind an account.
         </p>
       </header>
 

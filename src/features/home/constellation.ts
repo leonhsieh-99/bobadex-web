@@ -1,3 +1,4 @@
+import type { BrandPlace } from "@/features/brands/brandSearch";
 import type { BrandIndexItem } from "@/features/brands/loadBrandIndex";
 import { pickEvenSpread } from "./pickEvenSpread";
 
@@ -9,6 +10,7 @@ export type BrandSearchItem = {
   display: string;
   aliases: string[];
   icon_path: string | null;
+  places: BrandPlace[];
 };
 
 export type ConstellationMark = BrandSearchItem & {
@@ -31,30 +33,34 @@ function ringPosition(
   };
 }
 
-function asSearchItem(brand: BrandIndexItem): BrandSearchItem {
+function asSearchItem(
+  brand: BrandIndexItem,
+  includePlaces: boolean,
+): BrandSearchItem {
   return {
     slug: brand.slug,
     display: brand.display,
     aliases: brand.aliases,
     icon_path: brand.icon_path,
+    places: includePlaces ? brand.places : [],
   };
 }
 
 export function toSearchIndex(brands: BrandIndexItem[]): BrandSearchItem[] {
-  return brands.map(asSearchItem);
+  return brands.map((brand) => asSearchItem(brand, true));
 }
 
 export function buildConstellation(
   brands: BrandIndexItem[],
 ): ConstellationMark[] {
   const inner = pickEvenSpread(brands, INNER_COUNT).map((brand, index) => ({
-    ...asSearchItem(brand),
+    ...asSearchItem(brand, false),
     ring: "inner" as const,
     ...ringPosition(index, INNER_COUNT, 28, 30, 0.2),
   }));
   const outer = pickEvenSpread([...brands].reverse(), OUTER_COUNT).map(
     (brand, index) => ({
-      ...asSearchItem(brand),
+      ...asSearchItem(brand, false),
       ring: "outer" as const,
       ...ringPosition(index, OUTER_COUNT, 46, 44, 0.4),
     }),

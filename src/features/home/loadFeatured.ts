@@ -39,7 +39,7 @@ async function loadFeaturedForDay(dayKey: string): Promise<FeaturedBrand[]> {
   const requested = dayKeyToCalendar(dayKey) ?? pacificCalendar();
   const rankings = await getCachedBrandRankings();
   const withStores = rankings.filter(
-    (brand) => brand.store_count >= MIN_FEATURED_STORES,
+    (brand) => brand.location_count >= MIN_FEATURED_STORES,
   );
   if (withStores.length === 0) return [];
 

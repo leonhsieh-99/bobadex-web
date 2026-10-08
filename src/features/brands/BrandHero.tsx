@@ -2,29 +2,53 @@ import { MapPin, Star } from "lucide-react";
 import { marketChips, originEyebrow, tagChips } from "@/features/home/chips";
 import { BrandMark } from "./BrandMark";
 import { brandAccentForSlug } from "./brandAccent";
-import type { BrandDetail } from "./types";
+import type { BrandCatalogueStats, BrandDetail } from "./types";
 
-export function communityRatingLabel(
+function catalogueFacts(stats: BrandCatalogueStats) {
+  const facts: Array<{ label: string; value: string }> = [];
+  if (stats.communityScore != null && stats.ratingCount > 0) {
+    facts.push({
+      label: "Community score",
+      value: stats.communityScore.toFixed(1),
+    });
+  }
+  if (stats.ratingCount > 0) {
+    facts.push({
+      label: "Rating count",
+      value: String(stats.ratingCount),
+    });
+  }
+  if (stats.locationCount > 0) {
+    facts.push({
+      label: "Known locations",
+      value: String(stats.locationCount),
+    });
+  }
+  return facts;
+}
+
+function communityRatingLabel(
   avgRating: number | null,
   ratingCount: number | null,
 ) {
   const count = ratingCount ?? 0;
-  if (count <= 0 || avgRating == null) {
-    return { label: "Unrated", countLabel: null as string | null };
-  }
-
-  return {
-    label: avgRating.toFixed(1),
-    countLabel: `${count} ${count === 1 ? "rating" : "ratings"}`,
-  };
+  if (count <= 0 || avgRating == null) return "Unrated";
+  return avgRating.toFixed(1);
 }
 
-export default function BrandHero({ brand }: { brand: BrandDetail }) {
+export default function BrandHero({
+  brand,
+  stats,
+}: {
+  brand: BrandDetail;
+  stats: BrandCatalogueStats;
+}) {
   const palette = brandAccentForSlug(brand.slug);
   const markets = marketChips(brand.facts.market_presence);
   const tags = tagChips(brand.facts);
   const eyebrow = originEyebrow(brand.facts);
-  const rating = communityRatingLabel(brand.avg_rating, brand.rating_count);
+  const rating = communityRatingLabel(stats.avgRating, stats.ratingCount);
+  const facts = catalogueFacts(stats);
   const summary =
     brand.public_summary ||
     "We don't have a dossier for this brand yet. Ratings and photos still come from the community.";
@@ -60,23 +84,29 @@ export default function BrandHero({ brand }: { brand: BrandDetail }) {
         </h1>
         <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold sm:text-base">
           <Star
-            className={`size-4 ${
-              rating.countLabel
-                ? "fill-[#f0b429] text-[#f0b429]"
-                : "fill-transparent text-[#2b241f]/40"
-            }`}
+            className="size-4 fill-[#e8b84a] text-[#e8b84a]"
             aria-hidden="true"
           />
-          <span>{rating.label}</span>
-          {rating.countLabel ? (
-            <span className="font-medium opacity-60">
-              ({rating.countLabel})
-            </span>
-          ) : null}
+          <span>{rating}</span>
         </p>
         <p className="mt-3 max-w-2xl text-sm leading-6 opacity-70 sm:text-base sm:leading-7">
           {summary}
         </p>
+        {facts.length ? (
+          <dl className="mt-5 flex flex-wrap gap-2">
+            {facts.map((fact) => (
+              <div
+                key={fact.label}
+                className="rounded-2xl border border-[#2b241f]/10 bg-white/60 px-3 py-2"
+              >
+                <dt className="text-[0.65rem] font-extrabold uppercase tracking-[0.16em] opacity-55">
+                  {fact.label}
+                </dt>
+                <dd className="text-sm font-bold tabular-nums">{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
         {markets.length || tags.length ? (
           <div className="mt-6 flex flex-wrap items-center gap-2">
             {markets.map((market) => (

@@ -16,19 +16,24 @@ const SORTS: Array<{
   hint: string;
 }> = [
   {
+    id: "locations",
+    label: "Most locations",
+    hint: "Catalog storefronts we know about.",
+  },
+  {
+    id: "score",
+    label: "Community score",
+    hint: "Balances a thin set of ratings against the community average. At least one rating.",
+  },
+  {
     id: "rating",
-    label: "Rating",
-    hint: "Highest average, at least 3 rated shops — same bar as the app.",
+    label: "Highest rated",
+    hint: "Highest average, at least three ratings.",
   },
   {
-    id: "shops",
-    label: "On dexes",
-    hint: "Most user shops logged for this brand.",
-  },
-  {
-    id: "stores",
-    label: "Stores",
-    hint: "Most mapped locations attached to the brand.",
+    id: "collected",
+    label: "Most collected",
+    hint: "Distinct people who have logged the brand.",
   },
 ];
 
@@ -119,7 +124,7 @@ function UserBoardPanel({ board }: { board: UserBoard }) {
     return (
       <GateCard
         title="User rankings need accounts"
-        body="This board ranks drinkers by shops logged on their Bobadex. Accounts aren't open on the web yet, so it stays locked for now."
+        body="This board ranks drinkers. Accounts aren't open on the web yet, so it stays locked."
       />
     );
   }

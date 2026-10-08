@@ -8,21 +8,33 @@ function ratingLabel(brand: BrandRanking) {
   return brand.avg_rating.toFixed(1);
 }
 
-function metricCopy(brand: BrandRanking, by: BrandRankBy) {
-  if (by === "shops") {
-    return `${brand.shop_count} ${brand.shop_count === 1 ? "logged shop" : "logged shops"}`;
-  }
-  if (by === "stores") {
-    return `${brand.store_count} ${brand.store_count === 1 ? "store" : "stores"}`;
-  }
-  const count = brand.rating_count;
+function ratingCountCopy(count: number) {
   return `${count} ${count === 1 ? "rating" : "ratings"}`;
 }
 
+function metricCopy(brand: BrandRanking, by: BrandRankBy) {
+  if (by === "locations") {
+    const count = brand.location_count;
+    return `${count} known ${count === 1 ? "location" : "locations"}`;
+  }
+  if (by === "collected") {
+    const count = brand.collector_count;
+    return `${count} ${count === 1 ? "person" : "people"}`;
+  }
+  return ratingCountCopy(brand.rating_count);
+}
+
+function metricValue(brand: BrandRanking, by: BrandRankBy) {
+  if (by === "score") return brand.community_score?.toFixed(1) ?? "Unrated";
+  if (by === "collected") return String(brand.collector_count);
+  return String(brand.location_count);
+}
+
 const emptyCopy: Record<BrandRankBy, string> = {
-  rating: "No brands have three rated shops yet.",
-  shops: "No logged shops to rank yet.",
-  stores: "No mapped stores to rank yet.",
+  locations: "No known locations to rank yet.",
+  score: "No ratings to score yet.",
+  rating: "No brands have three ratings yet.",
+  collected: "No one has logged a brand yet.",
 };
 
 export function BrandRankList({
@@ -82,14 +94,14 @@ export function BrandRankList({
               {showRating ? (
                 <span className="inline-flex shrink-0 items-center gap-1 text-sm font-bold">
                   <Star
-                    className="size-3.5 fill-[#f0b429] text-[#f0b429]"
+                    className="size-3.5 fill-[#e8b84a] text-[#e8b84a]"
                     aria-hidden="true"
                   />
                   {ratingLabel(brand)}
                 </span>
               ) : (
                 <span className="shrink-0 text-sm font-bold tabular-nums">
-                  {by === "shops" ? brand.shop_count : brand.store_count}
+                  {metricValue(brand, by)}
                 </span>
               )}
             </Link>

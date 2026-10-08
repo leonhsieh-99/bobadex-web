@@ -1,4 +1,4 @@
-export type BrandRankBy = "rating" | "shops" | "stores";
+export type BrandRankBy = "locations" | "score" | "rating" | "collected";
 
 export type BrandRanking = {
   slug: string;
@@ -6,8 +6,9 @@ export type BrandRanking = {
   icon_path: string | null;
   avg_rating: number | null;
   rating_count: number;
-  shop_count: number;
-  store_count: number;
+  collector_count: number;
+  location_count: number;
+  community_score: number | null;
 };
 
 export type UserRanking = {

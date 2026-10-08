@@ -5,15 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { BrandMark } from "@/features/brands/BrandMark";
+import {
+  brandMatchesCatalogueQuery,
+  cataloguePlaceLabel,
+} from "@/features/brands/brandSearch";
 import type { BrandSearchItem } from "./constellation";
 
 const MAX_RESULTS = 8;
-
-function matchesQuery(brand: BrandSearchItem, query: string) {
-  if (brand.display.toLowerCase().includes(query)) return true;
-  if (brand.slug.toLowerCase().includes(query)) return true;
-  return brand.aliases.some((alias) => alias.toLowerCase().includes(query));
-}
 
 export default function BrandTypeahead({
   brands,
@@ -31,7 +29,7 @@ export default function BrandTypeahead({
   const results = useMemo(() => {
     if (!normalized) return [];
     return brands
-      .filter((brand) => matchesQuery(brand, normalized))
+      .filter((brand) => brandMatchesCatalogueQuery(brand, normalized))
       .slice(0, MAX_RESULTS);
   }, [brands, normalized]);
 
@@ -82,7 +80,7 @@ export default function BrandTypeahead({
             setOpen(false);
           }
         }}
-        placeholder="Find a brand…"
+        placeholder="Find a brand or a city…"
         className="w-full rounded-full border border-[#2b241f]/10 bg-white/75 py-3 pr-4 pl-11 text-sm shadow-sm outline-none backdrop-blur placeholder:opacity-50 focus:border-[#2b241f]/25"
         aria-label="Search the catalogue"
       />
@@ -97,6 +95,7 @@ export default function BrandTypeahead({
           ) : (
             results.map((brand, index) => {
               const selected = index === active;
+              const place = cataloguePlaceLabel(brand, normalized);
               return (
                 <Link
                   key={brand.slug}
@@ -118,8 +117,15 @@ export default function BrandTypeahead({
                       eager
                     />
                   </span>
-                  <span className="min-w-0 truncate font-semibold">
-                    {brand.display}
+                  <span className="min-w-0">
+                    <span className="block truncate font-semibold">
+                      {brand.display}
+                    </span>
+                    {place ? (
+                      <span className="block truncate text-xs opacity-55">
+                        {place}
+                      </span>
+                    ) : null}
                   </span>
                 </Link>
               );

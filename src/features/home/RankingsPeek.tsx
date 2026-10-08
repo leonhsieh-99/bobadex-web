@@ -26,7 +26,7 @@ export default function RankingsPeek({ brands }: { brands: BrandRanking[] }) {
               Rankings
             </h2>
             <p className="mt-2 max-w-xl text-sm leading-6 opacity-70 sm:text-base">
-              Top rated brands with at least three reviews.
+              Brands with the most known locations.
             </p>
           </div>
           <Link
@@ -38,7 +38,7 @@ export default function RankingsPeek({ brands }: { brands: BrandRanking[] }) {
           </Link>
         </div>
 
-        <BrandRankList brands={brands} by="rating" compact />
+        <BrandRankList brands={brands} by="locations" compact />
 
         <Link
           href="/rankings"

@@ -39,6 +39,13 @@ export type BrandProfileFacts = {
   observed_at: string | null;
 };
 
+export type BrandCatalogueStats = {
+  avgRating: number | null;
+  ratingCount: number;
+  communityScore: number | null;
+  locationCount: number;
+};
+
 export type BrandDetail = {
   slug: string;
   display: string;

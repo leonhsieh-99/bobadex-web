@@ -10,6 +10,9 @@ import {
   getCachedBrandGallery,
 } from "@/features/brands/loadBrandDetail";
 import { getCachedBrandIndex } from "@/features/brands/loadBrandIndex";
+import type { BrandCatalogueStats, BrandDetail } from "@/features/brands/types";
+import { getCachedBrandRankings } from "@/features/rankings/loadRankings";
+import type { BrandRanking } from "@/features/rankings/types";
 import PublicShell from "@/shared/layout/PublicShell";
 
 export const revalidate = 300;
@@ -45,9 +48,10 @@ export default async function BrandDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [brand, photos] = await Promise.all([
+  const [brand, photos, rankings] = await Promise.all([
     getCachedBrandDetail(slug),
     getCachedBrandGallery(slug),
+    getCachedBrandRankings(),
   ]);
   if (!brand) notFound();
 
@@ -62,11 +66,29 @@ export default async function BrandDetailPage({
       </p>
 
       <div className="space-y-12">
-        <BrandHero brand={brand} />
+        <BrandHero brand={brand} stats={catalogueStats(brand, rankings)} />
         <BrandFactsStrip brand={brand} />
         <BrandPhotoStrip photos={photos} />
         <BrandVisitCta slug={brand.slug} display={brand.display} />
       </div>
     </PublicShell>
   );
+}
+
+function catalogueStats(
+  brand: BrandDetail,
+  rankings: BrandRanking[],
+): BrandCatalogueStats {
+  const row = rankings.find((item) => item.slug === brand.slug);
+  const ratingCount = row?.rating_count ?? brand.rating_count ?? 0;
+  const avgRating = row?.avg_rating ?? brand.avg_rating;
+  return {
+    avgRating: ratingCount > 0 ? avgRating : null,
+    ratingCount,
+    communityScore:
+      row?.community_score != null && ratingCount > 0
+        ? row.community_score
+        : null,
+    locationCount: row?.location_count ?? 0,
+  };
 }
