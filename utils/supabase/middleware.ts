@@ -16,15 +16,15 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value),
-          );
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value);
+          });
           supabaseResponse = NextResponse.next({
             request,
           });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
-          );
+          cookiesToSet.forEach(({ name, value, options }) => {
+            supabaseResponse.cookies.set(name, value, options);
+          });
         },
       },
     },
@@ -45,6 +45,7 @@ export async function updateSession(request: NextRequest) {
     path === "/rankings" ||
     path.startsWith("/login") ||
     path.startsWith("/auth") ||
+    path.startsWith("/api/auth/otp") ||
     path.startsWith("/error") ||
     path.startsWith("/favicon") ||
     path.includes("/opengraph-image") ||
@@ -62,7 +63,10 @@ export async function updateSession(request: NextRequest) {
   if (
     AUTH_ENABLED &&
     user &&
-    (path === "/auth/login" || path === "/login" || path === "/auth")
+    (path === "/auth/login" ||
+      path === "/auth/signup" ||
+      path === "/login" ||
+      path === "/auth")
   ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }

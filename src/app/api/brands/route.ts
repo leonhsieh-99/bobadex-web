@@ -1,16 +1,39 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
-async function loadBrands(supabase: any) {
-  const { data, error } = await supabase
-    .from("brands")
-    .select("slug, display, aliases, icon_path, status");
-
-  if (error) throw error;
-  return data ?? [];
+function aliasesBySlug(
+  rows: Array<{ brand_slug: string | null; alias_display: string | null }> | null,
+) {
+  const grouped = new Map<string, string[]>();
+  for (const row of rows ?? []) {
+    const slug = row.brand_slug?.trim();
+    const alias = row.alias_display?.trim();
+    if (!slug || !alias) continue;
+    const list = grouped.get(slug) ?? [];
+    if (!list.includes(alias)) list.push(alias);
+    grouped.set(slug, list);
+  }
+  return grouped;
 }
 
-async function loadVersion(supabase: any) {
+async function loadBrands(supabase: Awaited<ReturnType<typeof createClient>>) {
+  const [{ data: brands, error: brandsError }, { data: aliases, error: aliasError }] =
+    await Promise.all([
+      supabase.from("brands").select("slug, display, icon_path, status"),
+      supabase.from("brand_aliases").select("brand_slug, alias_display"),
+    ]);
+
+  if (brandsError) throw brandsError;
+  if (aliasError) throw aliasError;
+
+  const grouped = aliasesBySlug(aliases);
+  return (brands ?? []).map((brand) => ({
+    ...brand,
+    aliases: grouped.get(brand.slug) ?? [],
+  }));
+}
+
+async function loadVersion(supabase: Awaited<ReturnType<typeof createClient>>) {
   const { data, error } = await supabase
     .from("brand_metadata")
     .select()

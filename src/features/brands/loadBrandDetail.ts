@@ -41,12 +41,11 @@ async function loadBrandFacts(slug: string): Promise<BrandDetail | null> {
     .maybeSingle();
 
   let catalog: CatalogRow | null = catalogResult.data as CatalogRow | null;
-  let brandAliases: string[] = [];
 
   if (catalogResult.error) {
     const { data: brand } = await supabase
       .from("brands")
-      .select("slug, display, icon_path, aliases, is_demo")
+      .select("slug, display, icon_path, is_demo")
       .eq("slug", slug)
       .maybeSingle();
 
@@ -61,7 +60,6 @@ async function loadBrandFacts(slug: string): Promise<BrandDetail | null> {
       has_profile: false,
       public_summary: null,
     };
-    brandAliases = asStringList(brand.aliases);
   }
 
   if (!catalog?.slug || !catalog.display) return null;
@@ -71,7 +69,7 @@ async function loadBrandFacts(slug: string): Promise<BrandDetail | null> {
     loadAliases(supabase, slug),
   ]);
 
-  const facts = mergeFacts(profile.facts, [...brandAliases, ...aliasRows]);
+  const facts = mergeFacts(profile.facts, aliasRows);
   const publicSummary =
     asTrimmed(catalog.public_summary) ?? profile.publicSummary;
   const hasProfile =
