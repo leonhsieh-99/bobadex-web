@@ -6,6 +6,11 @@ export type ShowcaseAchievement = {
 
 export const catalogAchievements: ShowcaseAchievement[] = [
   {
+    name: "First Sip",
+    description: "Add your first shop to your Bobadex.",
+    image: "/badges/first_sip.png",
+  },
+  {
     name: "Boba Explorer I",
     description: "Visit 5 unique shops.",
     image: "/badges/boba_explorer_1.png",
@@ -33,52 +38,67 @@ export const catalogAchievements: ShowcaseAchievement[] = [
   {
     name: "Bobaholic I",
     description: "Try 10 different drinks.",
-    image: "/badges/bobaholic_1.png",
+    image: "/badges/bobaholic1.png",
   },
   {
     name: "Bobaholic II",
     description: "Try 25 different drinks.",
-    image: "/badges/bobaholic_2.png",
+    image: "/badges/bobaholic2.png",
   },
   {
     name: "Bobaholic III",
     description: "Try 50 different drinks.",
-    image: "/badges/bobaholic_3.png",
+    image: "/badges/bobaholic3.png",
   },
   {
     name: "Bobaholic IV",
     description: "Try 100 different drinks.",
-    image: "/badges/bobaholic_4.png",
+    image: "/badges/bobaholic4.png",
   },
   {
     name: "Big Back",
     description: "Try 200 different drinks.",
-    image: "/badges/big_back.png",
+    image: "/badges/bigback.png",
   },
   {
     name: "Reviewer I",
     description: "Add notes to 5 drinks.",
-    image: "/badges/reviewer_1.png",
+    image: "/badges/reviewer1.png",
   },
   {
     name: "Reviewer II",
     description: "Add notes to 15 drinks.",
-    image: "/badges/reviewer_2.png",
+    image: "/badges/reviewer2.png",
   },
   {
     name: "Reviewer III",
     description: "Add notes to 30 drinks.",
-    image: "/badges/reviewer_3.png",
+    image: "/badges/reviewer3.png",
   },
   {
     name: "Reviewer IV",
     description: "Add notes to 50 drinks.",
-    image: "/badges/reviewer_4.png",
+    image: "/badges/reviewer4.png",
   },
   {
     name: "Yapper",
     description: "Add notes to 100 drinks.",
     image: "/badges/yapper.png",
+  },
+  {
+    name: "Talking Phase",
+    description: "Try 5 drinks from a single shop.",
+    image: "/badges/talking_phase.png",
+  },
+  {
+    name: "Situationship",
+    description: "Try 10 drinks from a single shop.",
+    image: "/badges/situationship.png",
+  },
+  {
+    name: "One and Only",
+    description: "Try 15 drinks from a single shop.",
+    image: "/badges/one_and_only.png",
   },
   {
     name: "Photographer I",
@@ -106,54 +126,14 @@ export const catalogAchievements: ShowcaseAchievement[] = [
     image: "/badges/clout_chaser.png",
   },
   {
-    name: "Social Sipper I",
-    description: "Add 1 friend on Bobadex.",
-    image: "/badges/social_sipper_1.png",
-  },
-  {
-    name: "Social Sipper II",
-    description: "Add 5 friends on Bobadex.",
-    image: "/badges/social_sipper_2.png",
-  },
-  {
-    name: "Social Sipper III",
-    description: "Add 15 friends on Bobadex.",
-    image: "/badges/social_sipper_3.png",
-  },
-  {
-    name: "Social Sipper IV",
-    description: "Add 50 friends on Bobadex.",
-    image: "/badges/social_sipper_4.png",
-  },
-  {
-    name: "Main Character",
-    description: "Add 100 friends on Bobadex.",
-    image: "/badges/main_character.png",
-  },
-  {
-    name: "Talking Phase",
-    description: "Try 5 drinks from a single shop.",
-    image: "/badges/talking_phase.png",
-  },
-  {
-    name: "Situationship",
-    description: "Try 10 drinks from a single shop.",
-    image: "/badges/situationship.png",
-  },
-  {
-    name: "One and Only",
-    description: "Try 15 drinks from a single shop.",
-    image: "/badges/one_and_only.png",
-  },
-  {
-    name: "TEA",
-    description: "Collect every achievement.",
+    name: "BOBA",
+    description: "Get all achievements.",
     image: "/badges/boba.png",
   },
 ];
 
 export const teaserAchievements = catalogAchievements.filter((achievement) =>
-  ["Boba Explorer I", "Bobaholic I", "Photographer I", "TEA"].includes(
+  ["First Sip", "Boba Explorer I", "Bobaholic I", "BOBA"].includes(
     achievement.name,
   ),
 );

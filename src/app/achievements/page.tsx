@@ -4,12 +4,11 @@ import { AUTH_ENABLED } from "@/features/auth/authEnabled";
 import { AchievementGrid } from "@/features/home/AchievementShowcase";
 import { catalogAchievements } from "@/features/home/showcaseAchievements";
 import PublicShell from "@/shared/layout/PublicShell";
-import { SUPPORT_EMAIL } from "@/shared/site";
 
 export const metadata: Metadata = {
   title: "Achievements — Bobadex",
   description:
-    "Browse the medals you can earn in Bobadex by logging shops, drinks, photos, and friends.",
+    "Browse the medals you can earn in Bobadex by logging shops, drinks, notes, and photos.",
 };
 
 export default function AchievementsPage() {
@@ -24,19 +23,8 @@ export default function AchievementsPage() {
         </h1>
         <p className="mt-4 text-base leading-7 opacity-70 sm:text-lg">
           Look freely. These unlock when you add shops, try drinks, write notes,
-          upload photos, and add friends. A few secret medals stay off this
-          list.
-        </p>
-        <p className="mt-3 max-w-xl text-sm leading-6 opacity-55">
-          These badges are AI-generated stand-ins. If you want to draw
-          replacements,{" "}
-          <a
-            href={`mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent("Bobadex badge design")}`}
-            className="font-semibold underline decoration-[#2b241f]/25 underline-offset-2 hover:opacity-100"
-          >
-            send a design
-          </a>{" "}
-          and I&apos;ll swap it in.
+          upload photos, and fill out your catalogue. A few secret medals stay
+          off this list.
         </p>
       </header>
 
