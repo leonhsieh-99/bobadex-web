@@ -1,7 +1,5 @@
 import { redirect } from "next/navigation";
 import DashboardShell from "@/features/dashboard/components/DashboardShell";
-import { fetchShopsByOwnerId } from "@/features/shops/client/queries";
-import ShopsView from "@/features/shops/components/ShopsView";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function DashboardLayout({

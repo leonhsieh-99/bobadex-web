@@ -93,7 +93,7 @@ export default function BrandVisitClient({
           href={`/dashboard/${visit.shopId}`}
           className="inline-flex items-center gap-2 rounded-full border border-[#2b241f]/10 bg-white px-5 py-3 text-sm font-semibold shadow-sm transition-transform hover:-translate-y-0.5"
         >
-          Edit in your dex
+          Open in your dex
         </Link>
       }
     >

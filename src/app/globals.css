@@ -7,6 +7,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -41,6 +43,27 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-boba-xs: 6px;
+  --radius-boba-sm: 10px;
+  --radius-boba-md: 14px;
+  --radius-boba-lg: 20px;
+  --radius-boba-xl: 28px;
+  --color-boba-bg: var(--boba-bg);
+  --color-boba-surface: var(--boba-surface);
+  --color-boba-surface-alt: var(--boba-surface-alt);
+  --color-boba-outline: var(--boba-outline);
+  --color-boba-ink: var(--boba-ink);
+  --color-boba-ink-muted: var(--boba-ink-muted);
+  --color-boba-ink-faint: var(--boba-ink-faint);
+  --color-boba-accent: var(--boba-accent);
+  --color-boba-on-accent: var(--boba-on-accent);
+  --color-boba-accent-soft: var(--boba-accent-soft);
+  --color-boba-accent-ink: var(--boba-accent-ink);
+  --color-boba-star: var(--boba-star);
+  --color-boba-heart: var(--boba-heart);
+  --color-boba-success: var(--boba-success);
+  --color-boba-danger: var(--boba-danger);
+  --shadow-boba-floating: 0 8px 24px var(--boba-shadow);
   --animate-marquee: bobadex-marquee 32s linear infinite;
   --animate-float: bobadex-float 5.5s ease-in-out infinite;
   --animate-milk-tea-idle: milk-tea-idle 3.4s ease-in-out infinite;
@@ -115,6 +138,181 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Signed-in dex themes. Public pages stay on :root. Classic Milk Tea is the default. */
+[data-boba-theme] {
+  --boba-bg: #f5eee3;
+  --boba-surface: #fffcf7;
+  --boba-surface-alt: #efe5d6;
+  --boba-outline: #e3d6c5;
+  --boba-ink: #2b1f17;
+  --boba-ink-muted: #6f6157;
+  --boba-ink-faint: #b8ab9e;
+  --boba-accent: #8a5a3c;
+  --boba-on-accent: #ffffff;
+  --boba-accent-soft: #ebd9c7;
+  --boba-accent-ink: #6e4429;
+  --boba-star: #e8b84a;
+  --boba-heart: #e07a7a;
+  --boba-success: #4e8a5b;
+  --boba-danger: #c4453f;
+  --boba-shadow: #2b1f171f;
+  --background: var(--boba-bg);
+  --foreground: var(--boba-ink);
+  --card: var(--boba-surface);
+  --card-foreground: var(--boba-ink);
+  --popover: var(--boba-surface);
+  --popover-foreground: var(--boba-ink);
+  --primary: var(--boba-accent);
+  --primary-foreground: var(--boba-on-accent);
+  --secondary: var(--boba-surface-alt);
+  --secondary-foreground: var(--boba-ink);
+  --muted: var(--boba-surface-alt);
+  --muted-foreground: var(--boba-ink-muted);
+  --accent: var(--boba-accent-soft);
+  --accent-foreground: var(--boba-accent-ink);
+  --destructive: var(--boba-danger);
+  --border: var(--boba-outline);
+  --input: var(--boba-outline);
+  --ring: var(--boba-accent);
+}
+
+[data-boba-theme="matcha"] {
+  --boba-bg: #eff3e9;
+  --boba-surface: #fbfdf8;
+  --boba-surface-alt: #e4ebdc;
+  --boba-outline: #d6dfcc;
+  --boba-ink: #1e271c;
+  --boba-ink-muted: #5f6b5a;
+  --boba-ink-faint: #a9b3a3;
+  --boba-accent: #5c7f4c;
+  --boba-on-accent: #ffffff;
+  --boba-accent-soft: #dae7cf;
+  --boba-accent-ink: #46633a;
+}
+
+[data-boba-theme="taro"] {
+  --boba-bg: #f2eef7;
+  --boba-surface: #fcfafe;
+  --boba-surface-alt: #e8e1f0;
+  --boba-outline: #dcd3e6;
+  --boba-ink: #27203a;
+  --boba-ink-muted: #695f7a;
+  --boba-ink-faint: #b0a7bf;
+  --boba-accent: #7b5aa6;
+  --boba-on-accent: #ffffff;
+  --boba-accent-soft: #e5daf1;
+  --boba-accent-ink: #5e4384;
+}
+
+[data-boba-theme="strawberry"] {
+  --boba-bg: #faeff0;
+  --boba-surface: #fffafa;
+  --boba-surface-alt: #f3e1e3;
+  --boba-outline: #ebd5d7;
+  --boba-ink: #33201f;
+  --boba-ink-muted: #7a625f;
+  --boba-ink-faint: #bfa9a7;
+  --boba-accent: #b84a60;
+  --boba-on-accent: #ffffff;
+  --boba-accent-soft: #f6d6dc;
+  --boba-accent-ink: #9e3f52;
+}
+
+[data-boba-theme="thai_tea"] {
+  --boba-bg: #faf0e6;
+  --boba-surface: #fffaf5;
+  --boba-surface-alt: #f2e2d3;
+  --boba-outline: #ead8c6;
+  --boba-ink: #33241a;
+  --boba-ink-muted: #7a6656;
+  --boba-ink-faint: #bfab9b;
+  --boba-accent: #b85a2a;
+  --boba-on-accent: #ffffff;
+  --boba-accent-soft: #f5dbc8;
+  --boba-accent-ink: #a6512a;
+}
+
+[data-boba-theme="mango"] {
+  --boba-bg: #fbf4e2;
+  --boba-surface: #fffcf4;
+  --boba-surface-alt: #f3e8cf;
+  --boba-outline: #eaddbe;
+  --boba-ink: #33290f;
+  --boba-ink-muted: #77693f;
+  --boba-ink-faint: #bbae86;
+  --boba-accent: #d9a23a;
+  --boba-on-accent: #2a2008;
+  --boba-accent-soft: #f7e6b8;
+  --boba-accent-ink: #73520f;
+  --boba-star: #d0931f;
+}
+
+[data-boba-theme="oolong"] {
+  --boba-bg: #f1f1ee;
+  --boba-surface: #fbfbf9;
+  --boba-surface-alt: #e6e7e2;
+  --boba-outline: #d8dad4;
+  --boba-ink: #22252a;
+  --boba-ink-muted: #646a72;
+  --boba-ink-faint: #a6abb2;
+  --boba-accent: #4e6f6c;
+  --boba-on-accent: #ffffff;
+  --boba-accent-soft: #d8e5e3;
+  --boba-accent-ink: #3b5654;
+}
+
+[data-boba-theme="brown_sugar"] {
+  --boba-bg: #1b1411;
+  --boba-surface: #251c18;
+  --boba-surface-alt: #2f2520;
+  --boba-outline: #3a2e28;
+  --boba-ink: #f4eadf;
+  --boba-ink-muted: #b5a493;
+  --boba-ink-faint: #6e6055;
+  --boba-accent: #dda46a;
+  --boba-on-accent: #1b1411;
+  --boba-accent-soft: #3b2c22;
+  --boba-accent-ink: #e8b981;
+}
+
+[data-boba-theme="black_sesame"] {
+  --boba-bg: #121212;
+  --boba-surface: #1b1b1b;
+  --boba-surface-alt: #262626;
+  --boba-outline: #3b3b3b;
+  --boba-ink: #ececec;
+  --boba-ink-muted: #a3a3a3;
+  --boba-ink-faint: #666666;
+  --boba-accent: #cfc7ba;
+  --boba-on-accent: #121212;
+  --boba-accent-soft: #2c2a26;
+  --boba-accent-ink: #d9d2c6;
+}
+
+[data-boba-theme="midnight_taro"] {
+  --boba-bg: #15121d;
+  --boba-surface: #1e1a29;
+  --boba-surface-alt: #2a2438;
+  --boba-outline: #403753;
+  --boba-ink: #efeaf7;
+  --boba-ink-muted: #ada4c0;
+  --boba-ink-faint: #6a6280;
+  --boba-accent: #b08be0;
+  --boba-on-accent: #15121d;
+  --boba-accent-soft: #2f2542;
+  --boba-accent-ink: #c4a6ec;
+}
+
+[data-boba-theme="brown_sugar"],
+[data-boba-theme="black_sesame"],
+[data-boba-theme="midnight_taro"] {
+  --boba-star: #f0c25a;
+  --boba-heart: #ea8b8b;
+  --boba-success: #6fb07c;
+  --boba-danger: #e06b66;
+  --boba-shadow: #00000080;
 }
 
 @layer base {

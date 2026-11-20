@@ -2,6 +2,7 @@
 
 import { Lock } from "lucide-react";
 import Link from "next/link";
+import SignOutButton from "@/features/auth/components/SignOutButton";
 import { BrandLettering } from "@/features/brands/BrandLettering";
 import { AI_DATA_DISCLOSURE, AI_DATA_HEADING } from "./aiDisclosure";
 import { useBrandVisuals } from "./BrandVisualsProvider";
@@ -175,6 +176,9 @@ function AccountSettings({
           >
             Open profile
           </Link>
+          <SignOutButton className="mt-3 inline-flex rounded-full border border-[#9a3412]/30 px-4 py-2 text-sm font-semibold text-[#9a3412] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9a3412] disabled:opacity-60">
+            Sign out
+          </SignOutButton>
         </>
       ) : (
         <div className="mt-4 rounded-[1.2rem] border border-[#2b241f]/10 bg-[#2b241f]/[0.03] px-4 py-4">

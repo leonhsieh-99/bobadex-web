@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { publicAssetURL, thumbPath } from "@/utils/media";
 
@@ -31,12 +30,11 @@ export default function UserMark({
       style={{ width: size, height: size, fontSize: size * 0.38 }}
     >
       {showImage ? (
-        <Image
+        <img
           src={mediaSrc(path, kind === "original" ? "original" : "thumb")}
           alt=""
           width={size}
           height={size}
-          sizes={`${size}px`}
           className="h-full w-full object-cover"
           onError={() =>
             setKind((current) => (current === "thumb" ? "original" : "none"))

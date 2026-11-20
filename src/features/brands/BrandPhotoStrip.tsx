@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { publicAssetURL, thumbPath } from "@/utils/media";
 import type { BrandGalleryPhoto } from "./types";
@@ -39,19 +38,17 @@ function GalleryStill({ photo }: { photo: BrandGalleryPhoto }) {
   const [kind, setKind] = useState<"thumb" | "original" | "none">("thumb");
   const src =
     kind === "thumb"
-      ? publicAssetURL("media-uploads", thumbPath(photo.image_path, 256))
+      ? publicAssetURL("media-uploads", thumbPath(photo.image_path, 512))
       : publicAssetURL("media-uploads", photo.image_path);
 
   return (
     <figure className="w-36 overflow-hidden rounded-[1.4rem] border border-[#2b241f]/10 bg-white/70 sm:w-44">
       <div className="relative h-44 w-full bg-[#2b241f]/5 sm:h-52">
         {kind !== "none" ? (
-          <Image
+          <img
             src={src}
             alt={photo.comment?.trim() || "Public community photo"}
-            fill
-            sizes="176px"
-            className="object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             onError={() =>
               setKind((current) => (current === "thumb" ? "original" : "none"))
             }

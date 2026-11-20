@@ -6,5 +6,5 @@ export default async function ShopDetailsPage({
   params: Promise<{ shopId: string }>;
 }) {
   const { shopId } = await params;
-  return <ShopDetails shopId={shopId} />;
+  return <ShopDetails key={shopId} shopId={shopId} />;
 }

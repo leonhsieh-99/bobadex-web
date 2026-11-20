@@ -7,6 +7,7 @@ import {
   LibraryBig,
   Lock,
   LogIn,
+  LogOut,
   Medal,
   Settings,
   Trophy,
@@ -16,6 +17,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AUTH_ENABLED } from "@/features/auth/authEnabled";
+import SignOutButton from "@/features/auth/components/SignOutButton";
 import UserMark from "@/shared/layout/UserMark";
 import { userInitials } from "@/shared/layout/userInitials";
 import { createClient } from "@/utils/supabase/client";
@@ -39,6 +41,17 @@ const itemClassName =
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function isMemberActive(pathname: string, href: string) {
+  if (href === "/dashboard") {
+    return (
+      pathname === "/dashboard" ||
+      (pathname.startsWith("/dashboard/") &&
+        !pathname.startsWith("/dashboard/profile"))
+    );
+  }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -97,7 +110,7 @@ export default function PublicSidebar() {
 
   return (
     <aside className="relative z-20 border-b border-[#2b241f]/10 bg-[#fbf8f0]/90 backdrop-blur md:fixed md:inset-y-0 md:left-0 md:w-52 md:border-b-0 md:border-r">
-      <nav className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-4 py-3 md:h-full md:flex-col md:items-stretch md:overflow-visible md:px-4 md:py-7">
+      <nav className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-4 py-3 md:h-full md:flex-col md:items-stretch md:overflow-y-auto md:px-4 md:py-7">
         <Link
           href={isAuthenticated ? "/dashboard/profile" : "/"}
           className="mr-3 flex items-center rounded-full p-1 md:mb-10 md:mr-0 md:justify-center"
@@ -110,6 +123,10 @@ export default function PublicSidebar() {
             size={48}
           />
         </Link>
+
+        <p className="hidden px-3 pt-1 pb-1 text-[10px] font-bold tracking-[0.18em] uppercase opacity-55 md:block">
+          Catalogue
+        </p>
 
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -127,11 +144,20 @@ export default function PublicSidebar() {
           );
         })}
 
+        <p className="hidden px-3 pt-4 pb-1 text-[10px] font-bold tracking-[0.18em] uppercase opacity-55 md:block">
+          Your Bobadex
+        </p>
+
         {memberItems.map((item) => {
           const Icon = item.icon;
+          const active = isMemberActive(pathname, item.href);
 
           return isAuthenticated ? (
-            <Link key={item.name} href={item.href} className={itemClassName}>
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`${itemClassName} ${active ? "bg-[#2b241f]/8" : ""}`}
+            >
               <Icon className="size-[18px]" aria-hidden="true" />
               {item.name}
             </Link>
@@ -149,7 +175,7 @@ export default function PublicSidebar() {
           );
         })}
 
-        {!isAuthenticated && (
+        {!isAuthenticated ? (
           <Link
             href="/auth/login?next=/dashboard"
             className={`${itemClassName} ml-auto md:mt-auto md:ml-0`}
@@ -157,6 +183,13 @@ export default function PublicSidebar() {
             <LogIn className="size-[18px]" aria-hidden="true" />
             Sign in
           </Link>
+        ) : (
+          <SignOutButton
+            className={`${itemClassName} ml-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2b241f] disabled:opacity-60 md:mt-auto md:ml-0`}
+          >
+            <LogOut className="size-[18px]" aria-hidden="true" />
+            Sign out
+          </SignOutButton>
         )}
       </nav>
     </aside>

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useBrandVisuals } from "@/features/settings/BrandVisualsProvider";
 import { publicAssetURL, thumbPath } from "@/utils/media";
@@ -64,14 +63,12 @@ export function BrandMark({
   }
 
   return (
-    <Image
+    <img
       src={publicAssetURL("shop-media", thumbPath(iconPath, size))}
       alt=""
       width={size}
       height={size}
-      sizes={`${rendered}px`}
       className="h-full w-full object-contain"
-      priority={priority}
       loading={priority ? "eager" : "lazy"}
       onError={() => setFailed(true)}
     />
